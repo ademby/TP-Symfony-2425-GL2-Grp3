@@ -4,15 +4,22 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 final class HomeController extends AbstractController
 {
-    #[Route('/', name: 'index')]
-    public function index(): Response{
-        return $this->home(); // A reviser
+    /**
+     * @Route("/", name="index")
+     */
+    public function index(): Response
+    {
+        return $this->redirectToRoute('home');
     }
-    #[Route('/home', name: 'home')]
+
+    /**
+     * @Route("/home", name="home")
+     */
     public function home(): Response
     {
         return $this->render('home/index.html.twig', [
@@ -20,37 +27,51 @@ final class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/login', name: 'login')]
+    /**
+     * @Route("/login", name="login")
+     */
     public function login(): Response
-    {if ($this->getUser()) {
-        throw $this->createAccessDeniedException();
-    }
-        return $this->render('home/login.html.twig', []);
+    {
+        if ($this->getUser()) {
+            $this->addFlash('warning', 'You are already logged in.');
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('home/login.html.twig');
     }
 
-    #[Route('/register', name: 'register')]
+    /**
+     * @Route("/register", name="register")
+     */
     public function register(): Response
-    {if ($this->getUser()) {
-        throw $this->createAccessDeniedException();
-    }
-        return $this->render('home/register.html.twig', []);
-    }
+    {
+        if ($this->getUser()) {
+            $this->addFlash('warning', 'You are already registered and logged in.');
+            return $this->redirectToRoute('home');
+        }
 
-
-
-    #[Route('/logout', name: 'logout')]
-    public function logout(): Response
-    {if (!$this->getUser()) {
-        throw $this->createAccessDeniedException();
-    }
-        return new Response("Bye");
+        return $this->render('home/register.html.twig');
     }
 
-    #[Route('/profile', name: 'profile')]
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout(): void
+    {
+        
+        throw new \LogicException('Logout is handled by Symfony firewall.');
+    }
+
+    /**
+     * @Route("/profile", name="profile")
+     */
     public function profile(): Response
-    { if (!$this->getUser()) {
-        throw $this->createAccessDeniedException();
-    }
-        return $this->render('home/profile.html.twig', []);
+    {
+        if (!$this->getUser()) {
+            $this->addFlash('danger', 'You must be logged in to access your profile.');
+            return $this->redirectToRoute('login');
+        }
+
+        return $this->render('home/profile.html.twig');
     }
 }
