@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
+use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -32,16 +34,15 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/', name: 'prod_show_all')]
-	#[IsGranted('ROLE_USER')]
-    public function show_all(): Response
+    public function show_all(ProductService $productService): Response
     {
         return $this->render('product/show_all.html.twig', [
             'controller_name' => 'ProductController',
+            'products' => $productService->getProducts() // Testing the service
         ]);
     }
 
     #[Route('/id/{id}', name: 'prod_show_prod', requirements: ['id' => '\d+'])]
-	#[IsGranted('ROLE_USER')]
     public function show(int $id): Response
     {
         return $this->render('product/show_prod.html.twig', [
@@ -50,7 +51,6 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/category/{cat_name}', name: 'prod_show_cat')]
-	#[IsGranted('ROLE_USER')]
     public function show_cat(string $cat_name): Response
     {
         return $this->render('product/show_cat.html.twig', [

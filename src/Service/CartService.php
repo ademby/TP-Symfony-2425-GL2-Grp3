@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Service;
+
 class CartService
 {
     public function __construct(
@@ -43,18 +45,18 @@ class CartService
     {
         $cart = $this->getCart($user);
         $product = $this->productRepo->find($productId);
-        
+
         if ($item = $this->findCartItem($cart, $productId)) {
             $item->setQuantity($item->getQuantity() + 1);
         } else {
             $cart->addCartItem(new CartItem($product, 1));
             $this->em->persist($cart->getCartItems()->last());
         }
-        
+
         $this->em->flush();
     }
     /*
-     * WARNING: Avoid 
+     * WARNING: Avoid
      */
     public function incQte(User $user, int $productId): void
     {
@@ -62,11 +64,11 @@ class CartService
     }
 
     /**
-     * WARNING: Avoid 
+     * WARNING: Avoid
      */
     public function decQte(User $user, int $productId): void
     {
-        $this->setQte($user, $productId, 
+        $this->setQte($user, $productId,
             max(0, $this->getQte($user, $productId) - 1)
         );
     }
@@ -74,7 +76,7 @@ class CartService
 
     /**
      * Removes items with zero quantity
-     * Persistence: 
+     * Persistence:
      * - Removes zero-qty CartItems
      * - Flushes changes
      */
@@ -102,7 +104,7 @@ class CartService
     {
         $cart = $this->cartRepo->findOneBy(['user' => $user]);
         $result = [];
-        
+
         if ($cart) {
             foreach ($cart->getItems() as $item) {
                 if ($item->getQuantity() > 0) {
@@ -112,11 +114,11 @@ class CartService
                     ];
                 }
             }
-            
+
             $this->em->remove($cart);
             $this->em->flush();
         }
-        
+
         return $result;
     }
 

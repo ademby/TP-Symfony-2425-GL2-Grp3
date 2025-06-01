@@ -87,15 +87,15 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "update-sqlite": [  
-            "@php bin/console doctrine:database:create",
-            "@php bin/console doctrine:migrations:migrate --no-interaction",  
-            "@php bin/console doctrine:fixtures:load --no-interaction"  
+        "update-sqlite": [
+            "symfony console doctrine:database:create",
+            "symfony console doctrine:migrations:migrate --no-interaction",
+            "symfony console doctrine:fixtures:load --purge-with-truncate --no-interaction"
         ],
-        "update-mysql": [  
-            "@php bin/console doctrine:database:create --if-not-exists",
-            "@php bin/console doctrine:migrations:migrate --no-interaction",  
-            "@php bin/console doctrine:fixtures:load --no-interaction"  
+        "update-mysql": [
+            "symfony console doctrine:database:create --if-not-exists",
+            "symfony console doctrine:migrations:migrate --no-interaction",
+            "symfony console doctrine:fixtures:load --no-interaction"
         ]
     },
     "conflict": {
