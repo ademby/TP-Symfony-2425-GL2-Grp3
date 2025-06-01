@@ -1,0 +1,15 @@
+{% extends 'emails/base.html.twig' %}
+
+{% block content %}
+    <h1>Order #{{ order.id }}</h1>
+    <p>Dear {{ customer.name }}, thank you for your order!</p>
+    
+    <table>
+        {% for item in order.items %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }} x {{ item.unitPrice|format_currency('USD') }}</td> {# badil w zid created at mta3 order somewhere#}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
