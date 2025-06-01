@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250601082815 extends AbstractMigration
+final class Version20250601132748 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -40,6 +40,9 @@ final class Version20250601082815 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             CREATE INDEX IDX_F0FE25271AD5CDBF ON cart_item (cart_id)
+        SQL);
+        $this->addSql(<<<'SQL'
+            CREATE UNIQUE INDEX cart_product_unique ON cart_item (cart_id, product_id)
         SQL);
         $this->addSql(<<<'SQL'
             CREATE TEMPORARY TABLE __temp__category AS SELECT id, name, image_url FROM category
@@ -99,7 +102,10 @@ final class Version20250601082815 extends AbstractMigration
             CREATE INDEX IDX_52EA1F098D9F6D38 ON order_item (order_id)
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TEMPORARY TABLE __temp__product AS SELECT id, category_id, title, debin/console doctrine:migrations:migratescription, image_url, price, properties FROM product
+            CREATE UNIQUE INDEX order_product_unique ON order_item (order_id, product_id)
+        SQL);
+        $this->addSql(<<<'SQL'
+            CREATE TEMPORARY TABLE __temp__product AS SELECT id, category_id, title, description, image_url, price, properties FROM product
         SQL);
         $this->addSql(<<<'SQL'
             DROP TABLE product
