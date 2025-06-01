@@ -10,11 +10,13 @@ final class HomeController extends AbstractController
 {
     #[Route('/', name: 'index')]
     public function index(): Response{
-        return $this->home(); // A reviser
+        //Cv
+        return $this->redirect('home');
     }
     #[Route('/home', name: 'home')]
     public function home(): Response
     {
+        //Cv
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);
@@ -23,6 +25,8 @@ final class HomeController extends AbstractController
     #[Route('/login', name: 'login')]
     public function login(): Response
     {
+        //parameters : User $user = null, ManagerRegistry $doctrine
+        //pseudo-code :
         return $this->render('home/login.html.twig', []);
     }
 
