@@ -25,28 +25,39 @@ final class HomeController extends AbstractController
     #[Route('/login', name: 'login')]
     public function login(): Response
     {
-        //parameters : User $user = null, ManagerRegistry $doctrine
-        //pseudo-code :
-        return $this->render('home/login.html.twig', []);
+        if ($this->getUser()) {
+            $this->addFlash('warning', 'You are already logged in.');
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('home/login.html.twig');
     }
 
     #[Route('/register', name: 'register')]
     public function register(): Response
     {
-        return $this->render('home/register.html.twig', []);
+        if ($this->getUser()) {
+            $this->addFlash('warning', 'You are already registered and logged in.');
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('home/register.html.twig');
     }
 
-
-
     #[Route('/logout', name: 'logout')]
-    public function logout(): Response
+    public function logout(): void
     {
-        return new Response("Bye");
+
+        throw new \LogicException('Logout is handled by Symfony firewall.');
     }
 
     #[Route('/profile', name: 'profile')]
     public function profile(): Response
     {
-        return $this->render('home/profile.html.twig', []);
+        if (!$this->getUser()) {
+            $this->addFlash('danger', 'You must be logged in to access your profile.');
+            return $this->redirectToRoute('login');
+        }
+        return $this->render('home/profile.html.twig');
     }
 }
