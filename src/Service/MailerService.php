@@ -1,35 +1,100 @@
 <?php
 
-
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class MailerService
 {
-    private $replyTo;
-    public function __construct(private MailerInterface $mailer, $replyTo) {
-        $this->replyTo = $replyTo;
-    }
-    public function sendEmail(
-        $to = 'aymen.sellaouti@gmail.com',
-        $content = '<p>See Twig integration for better HTML integration!</p>',
-        $subject = 'Time for Symfony Mailer!'
-    ): void
+    public function __construct(
+        private MailerInterface $mailer,
+        private \Twig\Environment $twig,
+        private ParameterBagInterface $params,
+        private string $defaultSender,
+        private string $replyTo
+    ) {}
+
+    /**
+     * Sends order confirmation email
+     */
+    public function sendOrderConfirmation($order, $recipient): void
     {
-        $email = (new Email())
-            ->from('aymen.noreply@example.com')
-            ->to($to)
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
+        $email = (new TemplatedEmail())
+            ->from($this->defaultSender)
+            ->to($recipient)
             ->replyTo($this->replyTo)
-            //->priority(Email::PRIORITY_HIGH)
+            ->subject(sprintf('Order #%d Confirmation', $order->getId()))
+            ->htmlTemplate('emails/order_confirmation.html.twig')
+            ->context([
+                'order' => $order,
+                'customer' => $order->getUser()
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+    /**
+     * Generic email with Twig template
+     */
+    public function sendTemplatedEmail(
+        string $template,
+        array $context,
+        string $recipient,
+        string $subject,
+        ?string $sender = null
+    ): void {
+        $email = (new TemplatedEmail())
+            ->from($sender ?? $this->defaultSender)
+            ->to($recipient)
             ->subject($subject)
-//            ->text('Sending emails is fun again!')
+            ->htmlTemplate($template)
+            ->context($context);
+
+        $this->mailer->send($email);
+    }
+
+    /**
+     * Raw HTML email (fallback)
+     */
+    public function sendRawEmail(
+        string $content,
+        string $recipient,
+        string $subject,
+        ?string $sender = null
+    ): void {
+        $email = (new Email())
+            ->from($sender ?? $this->defaultSender)
+            ->to($recipient)
+            ->subject($subject)
             ->html($content);
-             $this->mailer->send($email);
-        // ...
+
+        $this->mailer->send($email);
     }
 }
+
+
+
+
+
+
+// USAGE
+// // Specific order email
+// $mailer->sendOrderConfirmation($order, $user->getEmail());
+// 
+// // Generic template email
+// $mailer->sendTemplatedEmail(
+//     'emails/newsletter.html.twig',
+//     ['user' => $user],
+//     $user->getEmail(),
+//     'Monthly Newsletter'
+// );
+// 
+// // Raw HTML email (last resort)
+// $mailer->sendRawEmail(
+//     '<h1>Test</h1>',
+//     'test@example.com',
+//     'Raw Test'
+// );

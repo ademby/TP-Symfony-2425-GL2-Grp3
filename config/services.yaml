@@ -23,3 +23,9 @@ services:
     App\Service\UploaderService:
         arguments:
             $uploadDir: '%upload_dir%'
+
+
+    App\Service\MailerService:
+        arguments:
+            $defaultSender: '%env(MAILER_SENDER)%'
+            $replyTo: '%env(MAILER_REPLY_TO)%'
