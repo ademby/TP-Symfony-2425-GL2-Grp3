@@ -40,4 +40,29 @@ class ProductRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    // src/Repository/ProductRepository.php
+
+    /**
+     * @return Product[]
+     */
+    public function findByFilters(
+        ?Category $category = null,
+        ?int $page = null,
+        ?int $limit = null
+    ): array {
+        $qb = $this->createQueryBuilder('p')
+            ->orderBy('p.id', 'ASC');
+
+        if ($category) {
+            $qb->andWhere('p.category = :category')
+               ->setParameter('category', $category);
+        }
+
+        if ($page !== null && $limit !== null) {
+            $qb->setFirstResult(($page - 1) * $limit)
+               ->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }
