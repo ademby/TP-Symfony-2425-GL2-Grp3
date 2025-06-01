@@ -1,6 +1,7 @@
 This is what you need to do after pulling a branch :
 ```bash
-composer install
+rm composer.lock
+composer update
 cd assets && npm install && cd ..
 composer run update-sqlite
 ```
