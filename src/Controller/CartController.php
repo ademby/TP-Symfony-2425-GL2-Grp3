@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/cart')]
+#[IsGranted('ROLE_USER')]
 final class CartController extends AbstractController
 {
     #[Route('/', name: 'cart_show')]
@@ -17,13 +18,13 @@ final class CartController extends AbstractController
         ]);
     }
 
-    #[Route("/add", name: "cart_add")]
+    #[Route('/add', name: 'cart_add')]
     public function add(): Response
     {
         return new Response("Added Product To Cart");
     }
 
-    #[Route("/validate", name: "cart_validate")]
+    #[Route('/validate', name: 'cart_validate')]
     public function validate(): Response
     {
         return new Response("Are you sure ? ... <br> We sent you an email, our agent will talk to you soon.");
