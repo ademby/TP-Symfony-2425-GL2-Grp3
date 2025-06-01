@@ -10,16 +10,19 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProductController extends AbstractController
 {
     #[Route('/add', name: 'prod_add')]
+	#[IsGranted('ROLE_ADMIN')]
     public function add(): Response{
         return $this->render('product/add.html.twig', []);
     }
 
     #[Route('/update', name: 'prod_update')]
+	#[IsGranted('ROLE_ADMIN')]
     public function update(): Response{
         return $this->render('product/update.html.twig', []);
     }
 
     #[Route('/delete', name: 'prod_delete')]
+	#[IsGranted('ROLE_ADMIN')]
     public function delete(): Response{
         return new Response("Wanna Deleted Product ? ..  ");
     }

@@ -18,18 +18,21 @@ final class CategoryController extends AbstractController
     }
 
     #[Route('/add', name: 'cat_add',)]
+	#[IsGranted('ROLE_ADMIN')]
     public function add(): Response
     {
         return $this->render('category/add.html.twig', []);
     }
 
     #[Route('/update/{cat_name}', name: 'cat_update')]
+	#[IsGranted('ROLE_ADMIN')]
     public function update(string $cat_name): Response
     {
         return new Response("Updated Category {$cat_name}");
     }
 
     #[Route('/delete/{cat_name}', name: 'cat_delete')]
+	#[IsGranted('ROLE_ADMIN')]
     public function delete($cat_name): Response
     {
         return new Response("Deleted Category {$cat_name}");

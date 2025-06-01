@@ -22,13 +22,17 @@ final class HomeController extends AbstractController
 
     #[Route('/login', name: 'login')]
     public function login(): Response
-    {
+    {if ($this->getUser()) {
+        throw $this->createAccessDeniedException();
+    }
         return $this->render('home/login.html.twig', []);
     }
 
     #[Route('/register', name: 'register')]
     public function register(): Response
-    {
+    {if ($this->getUser()) {
+        throw $this->createAccessDeniedException();
+    }
         return $this->render('home/register.html.twig', []);
     }
 
@@ -36,13 +40,17 @@ final class HomeController extends AbstractController
 
     #[Route('/logout', name: 'logout')]
     public function logout(): Response
-    {
+    {if (!$this->getUser()) {
+        throw $this->createAccessDeniedException();
+    }
         return new Response("Bye");
     }
 
     #[Route('/profile', name: 'profile')]
     public function profile(): Response
-    {
+    { if (!$this->getUser()) {
+        throw $this->createAccessDeniedException();
+    }
         return $this->render('home/profile.html.twig', []);
     }
 }
