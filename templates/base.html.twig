@@ -20,16 +20,24 @@
 <body>
 <main>
     {% block navbar %}
-    {% include('fragments/navbar.html.twig') %}
+        {% include('fragments/navbar.html.twig') %}
     {% endblock %}
 
-{#    {% block debug %}#}
-{#        <a href="{{ path('home') }}">Home</a>#}
-{#        <a href="{{ path('login') }}">Login</a>#}
-{#        <a href="{{ path('register') }}">Register</a>#}
-{#        <a href="{{ path('logout') }}">Logout</a>#}
-{#        <a href="{{ path('profile') }}">Profile</a>#}
-{#    {% endblock %}#}
+    {% for type in ['info','success', 'error'] %}
+        {% for  message in app.session.flashBag.get(type) %}
+            <div class="alert alert-{{ type == 'error' ? 'danger' : type }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {#    {% block debug %} #}
+    {#        <a href="{{ path('home') }}">Home</a> #}
+    {#        <a href="{{ path('login') }}">Login</a> #}
+    {#        <a href="{{ path('register') }}">Register</a> #}
+    {#        <a href="{{ path('logout') }}">Logout</a> #}
+    {#        <a href="{{ path('profile') }}">Profile</a> #}
+    {#    {% endblock %} #}
 
     {% block body %}{% endblock %}
 </main>

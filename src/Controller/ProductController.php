@@ -54,7 +54,7 @@ final class ProductController extends AbstractController
     public function show(int $id): Response
     {
         return $this->render('product/show_prod.html.twig', [
-            'id' => $id
+            'product' => $this->productService->getProduct($id)
         ]);
     }
 

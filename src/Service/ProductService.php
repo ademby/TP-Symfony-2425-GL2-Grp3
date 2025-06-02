@@ -55,4 +55,9 @@ class ProductService
         $this->em->remove($product);
         $this->em->flush();
     }
+
+    public function getProduct(int $id): ?Product
+    {
+        return $this->repo->find($id);
+    }
 }
