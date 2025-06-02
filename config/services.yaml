@@ -29,3 +29,17 @@ services:
         arguments:
             $defaultSender: '%env(MAILER_SENDER)%'
             $replyTo: '%env(MAILER_REPLY_TO)%'
+
+    App\DataFixtures\categoryFixtures:
+        arguments:
+            $kernel: '@kernel'
+            $uploaderService: '@App\Service\UploaderService'
+
+    App\DataFixtures\ProductFixtures:
+        arguments:
+            $kernel: '@kernel'
+            $uploaderService: '@App\Service\UploaderService'
+
+    App\DataFixtures\CleanFixtures:
+        arguments:
+            $uploaderService: '@App\Service\UploaderService'

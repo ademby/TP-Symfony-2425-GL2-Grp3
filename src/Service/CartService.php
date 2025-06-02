@@ -2,6 +2,13 @@
 
 namespace App\Service;
 
+use App\Entity\Cart;
+use App\Entity\CartItem;
+use App\Entity\User;
+use App\Repository\CartRepository;
+use App\Repository\ProductRepository;
+use Doctrine\ORM\EntityManagerInterface;
+
 class CartService
 {
     public function __construct(
@@ -123,3 +130,11 @@ class CartService
     }
 
 }
+
+// USAGE
+// // Checkout
+// $cartData = $cartService->validate($user);
+// $order = $orderService->create($cartData, $user);
+//
+// // Admin
+// $orderService->setStatus($order, 'shipped');
