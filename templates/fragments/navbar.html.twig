@@ -1,7 +1,6 @@
 <header class="site-header">
     <div class="container">
         <div class="row justify-content-between">
-
             <div class="col-lg-12 col-12 d-flex align-items-center">
                 <a class="p-2 site-header-text d-flex justify-content-center align-items-center"
                    href="{{ path('home') }}">
@@ -17,6 +16,7 @@
                     <span>Products</span>
                 </a>
                 <div>
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
                     <a href="{{ path('login') }}" class="custom-btn custom-border-btn btn">
                         Login
                         <i class="bi-box-arrow-in-right ms-2"></i>
@@ -25,6 +25,7 @@
                         Register
                         <i class="bi-person-add ms-2"></i>
                     </a>
+                    {% else %}
                     <a href="{{ path('profile') }}" class="custom-btn custom-border-btn btn">
                         <i class="bi-person-circle"></i>
                     </a>
@@ -35,6 +36,7 @@
                         Logout
                         <i class="bi-box-arrow-right ms-2"></i>
                     </a>
+                    {% endif %}
                 </div>
 
             </div>

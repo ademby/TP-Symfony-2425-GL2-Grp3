@@ -11,6 +11,8 @@ class CarFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
+        return;
+
         $category1 = new Category();
         $category2 = new Category();
 

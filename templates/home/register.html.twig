@@ -4,7 +4,7 @@
     <div class="row">
 
         <div class="col-lg-5 col-12 mx-auto">
-            <form class="custom-form login-form" role="form" method="post" >
+            <form class="custom-form login-form" method="post" >
                 <h2 class="hero-title text-center mb-4 pb-2">Join The Team</h2>
 
                 {#                Enter Username #}
@@ -31,7 +31,9 @@
                 {#                Submit #}
                 <button type="submit" class="form-control mb-4" style="width: 100%">Sign Up</button>
                 {#                Register Redirect #}
-                <a href="{{ path('login') }}" class="btn custom-btn custom-border-btn" style="width: 100% ; font-size: small; font-weight : lighter ">Already Have An Account ?</a>
+                <a href="{{ path('login') }}" class="btn custom-btn custom-border-btn" style="width: 100% ; font-size: small; font-weight : lighter ">
+                    Already Have An Account ?
+                </a>
 
             </form>
 

@@ -16,15 +16,18 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            
+
+            entry_point: App\Security\LoginAdemAuthenticator
+
             form_login:
-                login_path: login       
-                check_path: login         
-                default_target_path: cat_show 
+                login_path: login
+                check_path: login
+                default_target_path: cat_show
 
             logout:
                 path: logout
                 target: home
+            custom_authenticator: App\Security\LoginAdemAuthenticator
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
