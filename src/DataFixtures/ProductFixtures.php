@@ -3,39 +3,30 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
-
+use App\Entity\Product;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use App\Service\UploaderService;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-use App\Entity\Product;
 
 class ProductFixtures extends Fixture implements DependentFixtureInterface
 {
-    private $kernel;
-    private $uploaderService;
 
-    public function __construct(KernelInterface $kernel, UploaderService $uploaderService)
-
-    {
-        $this->kernel = $kernel;
-        $this->uploaderService = $uploaderService;
-    }
+    public function __construct(
+        private KernelInterface $kernel,
+        private UploaderService $uploaderService
+    )
+    {}
 
     public function load(ObjectManager $manager): void
     {
-
-        $this->loadCategories($manager);
-
         $this->loadProductsOfCategory($manager, "laptop");
         $this->loadProductsOfCategory($manager, "computer");
         $this->loadProductsOfCategory($manager, "monitor");
         $this->loadProductNoCategory ($manager, "mouse");
         $this->loadProductNoCategory ($manager, "keyboard");
-
-
     }
     private function generateProductName(string $category): string
     {
@@ -72,8 +63,6 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
             $features[1],
             ['professionals', 'gamers', 'creatives', 'everyday use'][rand(0, 3)]
         );
-    }
-
     }
 
     public function loadProductsOfCategory(ObjectManager $manager, string $cat_name): void
