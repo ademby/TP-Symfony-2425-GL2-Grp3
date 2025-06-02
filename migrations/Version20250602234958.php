@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250602201857 extends AbstractMigration
+final class Version20250602234958 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -68,7 +68,7 @@ final class Version20250602201857 extends AbstractMigration
         SQL);
         $this->addSql(<<<'SQL'
             CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, cart_id INTEGER DEFAULT NULL, email VARCHAR(180) NOT NULL, roles CLOB NOT NULL --(DC2Type:json)
-            , password VARCHAR(255) NOT NULL, phone VARCHAR(20) DEFAULT NULL, first_name VARCHAR(50) DEFAULT NULL, last_name VARCHAR(50) DEFAULT NULL, age INTEGER DEFAULT NULL, region VARCHAR(100) DEFAULT NULL, created_at DATETIME NOT NULL, CONSTRAINT FK_8D93D6491AD5CDBF FOREIGN KEY (cart_id) REFERENCES cart (id) NOT DEFERRABLE INITIALLY IMMEDIATE)
+            , password VARCHAR(255) NOT NULL, phone VARCHAR(20) DEFAULT NULL, first_name VARCHAR(50) DEFAULT NULL, last_name VARCHAR(50) DEFAULT NULL, age INTEGER DEFAULT NULL, region VARCHAR(100) DEFAULT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, is_verified BOOLEAN NOT NULL, CONSTRAINT FK_8D93D6491AD5CDBF FOREIGN KEY (cart_id) REFERENCES cart (id) NOT DEFERRABLE INITIALLY IMMEDIATE)
         SQL);
         $this->addSql(<<<'SQL'
             CREATE UNIQUE INDEX UNIQ_8D93D6491AD5CDBF ON user (cart_id)

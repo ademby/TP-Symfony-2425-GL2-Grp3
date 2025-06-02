@@ -49,55 +49,55 @@ final class HomeController extends AbstractController
 //        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
 //    }
 
-    #[Route('/register', name: 'register')]
-    public function register(
-        Request $request,
-        UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $entityManager,
-        ValidatorInterface $validator
-    ): Response {
-        if ($this->getUser()) {
-            $this->addFlash('warning', 'You are already registered and logged in.');
-            return $this->redirectToRoute('home');
-        }
-
-        if ($request->isMethod('POST')) {
-            $user = new User();
-            $user->setEmail($request->request->get('email'));
-            $user->setFirstName($request->request->get('firstName'));
-            $user->setLastName($request->request->get('lastName'));
-            $user->setAge($request->request->get('age'));
-            $user->setRegion($request->request->get('region'));
-            $user->setPhone($request->request->get('phone'));
-
-
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $request->request->get('password')
-            );
-            $user->setPassword($hashedPassword);
-
-
-            $user->setRoles(['ROLE_USER']);
-
-
-            $errors = $validator->validate($user);
-            if (count($errors) > 0) {
-                foreach ($errors as $error) {
-                    $this->addFlash('danger', $error->getMessage());
-                }
-            } else {
-                // Save the user
-                $entityManager->persist($user);
-                $entityManager->flush();
-
-                $this->addFlash('success', 'Registration successful! You can now login.');
-                return $this->redirectToRoute('login');
-            }
-        }
-
-        return $this->render('home/register.html.twig');
-    }
+//    #[Route('/register', name: 'register')]
+//    public function register(
+//        Request $request,
+//        UserPasswordHasherInterface $passwordHasher,
+//        EntityManagerInterface $entityManager,
+//        ValidatorInterface $validator
+//    ): Response {
+//        if ($this->getUser()) {
+//            $this->addFlash('warning', 'You are already registered and logged in.');
+//            return $this->redirectToRoute('home');
+//        }
+//
+//        if ($request->isMethod('POST')) {
+//            $user = new User();
+//            $user->setEmail($request->request->get('email'));
+//            $user->setFirstName($request->request->get('firstName'));
+//            $user->setLastName($request->request->get('lastName'));
+//            $user->setAge($request->request->get('age'));
+//            $user->setRegion($request->request->get('region'));
+//            $user->setPhone($request->request->get('phone'));
+//
+//
+//            $hashedPassword = $passwordHasher->hashPassword(
+//                $user,
+//                $request->request->get('password')
+//            );
+//            $user->setPassword($hashedPassword);
+//
+//
+//            $user->setRoles(['ROLE_USER']);
+//
+//
+//            $errors = $validator->validate($user);
+//            if (count($errors) > 0) {
+//                foreach ($errors as $error) {
+//                    $this->addFlash('danger', $error->getMessage());
+//                }
+//            } else {
+//                // Save the user
+//                $entityManager->persist($user);
+//                $entityManager->flush();
+//
+//                $this->addFlash('success', 'Registration successful! You can now login.');
+//                return $this->redirectToRoute('login');
+//            }
+//        }
+//
+//        return $this->render('home/register.html.twig');
+//    }
 
 //    #[Route('/logout', name: 'logout')]
 //    public function logout(): void

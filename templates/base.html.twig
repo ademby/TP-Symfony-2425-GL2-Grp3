@@ -38,7 +38,9 @@
     {#        <a href="{{ path('logout') }}">Logout</a> #}
     {#        <a href="{{ path('profile') }}">Profile</a> #}
     {#    {% endblock %} #}
-    {% set is_login_or_register = app.request.attributes.get('_route') == 'login' or app.request.attributes.get('_route') == 'register' %}
+    {% set is_login_or_register =
+            app.request.attributes.get('_route') == 'login'
+        or  app.request.attributes.get('_route') == 'register' %}
     {% if not is_login_or_register %}
     <div class="container mt-4 mb-5" style="border-radius: 0.5rem; background-color: white; padding: 2rem;">
         {% endif %}

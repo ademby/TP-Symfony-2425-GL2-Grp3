@@ -75,16 +75,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(max: 100)]
     private ?string $region = null;
 
-    #[ORM\Column(type: 'datetime')]
+    #[ORM\Column(type: 'datetime', nullable: true, options: ["default" => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column]
-    private bool $isVerified = false;
+    private bool $isVerified = true; // this is it
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
         $this->createdAt = new \DateTime();
+        $this->roles = ['ROLE_USER'];
     }
 
     public function getId(): ?int
@@ -120,7 +121,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        
+
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
