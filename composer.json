@@ -43,6 +43,7 @@
         "symfony/validator": "7.3.*",
         "symfony/web-link": "7.3.*",
         "symfony/yaml": "7.3.*",
+        "symfonycasts/verify-email-bundle": "^1.17",
         "twig/extra-bundle": "^2.12|^3.21",
         "twig/twig": "^2.12|^3.21.1"
     },
@@ -88,14 +89,20 @@
             "@auto-scripts"
         ],
         "update-sqlite": [
-            "symfony console doctrine:database:create",
+            "symfony console doctrine:data:drop --force --no-interaction",
+            "symfony console doctrine:database:create --no-interaction",
+            "php -r \"array_map('unlink', glob('migrations/*.php'));\"",
+            "symfony console make:migration --no-interaction",
             "symfony console doctrine:migrations:migrate --no-interaction",
             "symfony console doctrine:fixtures:load --purge-with-truncate --no-interaction"
         ],
         "update-mysql": [
-            "symfony console doctrine:database:create --if-not-exists",
+            "symfony console doctrine:data:drop --force --no-interaction",
+            "symfony console doctrine:database:create --no-interaction",
+            "php -r \"array_map('unlink', glob('migrations/*.php'));\"",
+            "symfony console make:migration --no-interaction",
             "symfony console doctrine:migrations:migrate --no-interaction",
-            "symfony console doctrine:fixtures:load --no-interaction"
+            "symfony console doctrine:fixtures:load --purge-with-truncate --no-interaction"
         ]
     },
     "conflict": {

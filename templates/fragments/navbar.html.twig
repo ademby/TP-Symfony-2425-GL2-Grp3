@@ -27,7 +27,7 @@
                     </a>
                     {% else %}
                     <a href="{{ path('profile') }}" class="custom-btn custom-border-btn btn">
-                        <i class="bi-person-circle"></i>
+                        {{ app.user.firstName }}<i class="bi-person-circle {{ app.user.firstName ? " ms-1": "" }}"></i>
                     </a>
                     <a href="{{ path('cart_show') }}" class="custom-btn-inv custom-border-btn-inv btn">
                         <i class="bi-cart4"></i>
