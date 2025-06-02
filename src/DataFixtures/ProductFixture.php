@@ -27,7 +27,7 @@ class ProductFixture extends Fixture
     {
         $this->loadCategories($manager);
 
-        $this->loadProductsOfCategory($manager, "labtop");
+        $this->loadProductsOfCategory($manager, "laptop");
         $this->loadProductsOfCategory($manager, "computer");
         $this->loadProductsOfCategory($manager, "monitor");
         $this->loadProductNoCategory($manager, "mouse");
@@ -39,7 +39,7 @@ class ProductFixture extends Fixture
     public function loadCategories(ObjectManager $manager): void
     {
 
-        $categories = ["computer", "labtop", "monitor"];
+        $categories = ["computer", "laptop", "monitor"];
         foreach ($categories as $catName) {
             $category = new Category();
             $category->setName($catName);
