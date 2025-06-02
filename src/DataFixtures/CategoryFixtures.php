@@ -25,21 +25,17 @@ class CategoryFixtures extends Fixture
             'laptop',
             'monitor',
         ];
-
-        foreach ($categories as $name) {
+        $categories = ["computer", "laptop", "monitor"];
+        foreach ($categories as $catName) {
             $category = new Category();
-            $category->setName($name);
-            
-            $imagePath = $this->kernel->getProjectDir()."/dummy-data/{$name}/cat_{$name}.png";
-            if (file_exists($imagePath)) {
-                $url = $this->uploaderService->copy($imagePath);
-                $category->setImageURL($url);
-            }
-            
-            $manager->persist($category);
-            $this->addReference("category_{$name}", $category);
-        }
+            $category->setName($catName);
+            $imageName = "cat_" . $catName . '.png';
+            $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . $catName . '/' . $imageName;
 
+            $url = $this->uploaderService->copy($imagePath);
+            $category->setImageURL($url);
+            $manager->persist($category);
+        }
         $manager->flush();
     }
 }
