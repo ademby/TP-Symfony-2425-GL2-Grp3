@@ -3,28 +3,19 @@
         <div class="row justify-content-between">
 
             <div class="col-lg-12 col-12 d-flex align-items-center">
-                <a class="site-header-text d-flex justify-content-center align-items-center me-auto"
+                <a class="p-2 site-header-text d-flex justify-content-center align-items-center"
                    href="{{ path('home') }}">
                     <i class="bi-box"></i>
                     <span>SMARKET</span>
                 </a>
-
-                <ul class="social-icon d-flex justify-content-center align-items-center me-auto">
-                    <span class="text-white me-4 d-none d-lg-block">Stay Trendy</span>
-
-                    <li class="social-icon-item">
-                        <a href="#" class="social-icon-link bi-instagram"></a>
-                    </li>
-
-                    <li class="social-icon-item">
-                        <a href="#" class="social-icon-link bi-twitter"></a>
-                    </li>
-
-                    <li class="social-icon-item">
-                        <a href="#" class="social-icon-link bi-whatsapp"></a>
-                    </li>
-                </ul>
-
+                <a class="p-2"
+                   href="{{ path('cat_show') }}">
+                    <span>Categories</span>
+                </a>
+                <a class="p-2 me-auto"
+                   href="{{ path('prod_show_all') }}">
+                    <span>Products</span>
+                </a>
                 <div>
                     <a href="{{ path('login') }}" class="custom-btn custom-border-btn btn">
                         Login

@@ -83,7 +83,7 @@ class MailerService
 // USAGE
 // // Specific order email
 // $mailer->sendOrderConfirmation($order, $user->getEmail());
-// 
+//
 // // Generic template email
 // $mailer->sendTemplatedEmail(
 //     'emails/newsletter.html.twig',
@@ -91,7 +91,7 @@ class MailerService
 //     $user->getEmail(),
 //     'Monthly Newsletter'
 // );
-// 
+//
 // // Raw HTML email (last resort)
 // $mailer->sendRawEmail(
 //     '<h1>Test</h1>',

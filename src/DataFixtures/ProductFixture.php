@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Category;
+<<<<<<< HEAD
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -16,6 +17,22 @@ class ProductFixture extends Fixture
     private $uploaderService;
 
     public function __construct(KernelInterface $kernel, UploaderService $uploaderService)
+=======
+use App\Entity\Product;
+use App\Service\UploaderService;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+class ProductFixture extends Fixture
+{
+    private KernelInterface $kernel;
+    private UploaderService $uploaderService;
+
+    public function __construct(
+        KernelInterface $kernel,
+        UploaderService $uploaderService)
+>>>>>>> refs/remotes/origin/master
     {
         $this->kernel = $kernel;
         $this->uploaderService = $uploaderService;
@@ -24,22 +41,39 @@ class ProductFixture extends Fixture
     public function load(ObjectManager $manager): void
     {
         $this->loadCategories($manager);
+<<<<<<< HEAD
         $this->loadProductsOfCategory($manager, "labtop");
         $this->loadProductsOfCategory($manager, "computer");
         $this->loadProductsOfCategory($manager, "monitor");
         $this->loadProductNoCategory($manager, "mouse");
         $this->loadProductNoCategory($manager, "keyboard");
+=======
+//        $this->loadProductsOfCategory($manager, "laptop");
+//        $this->loadProductsOfCategory($manager, "computer");
+//        $this->loadProductsOfCategory($manager, "monitor");
+//        $this->loadProductNoCategory($manager, "mouse");
+//        $this->loadProductNoCategory($manager, "keyboard");
+>>>>>>> refs/remotes/origin/master
 
     }
 
     public function loadCategories(ObjectManager $manager): void
     {
+<<<<<<< HEAD
         $categories = ["computer", "labtop", "monitor"];
         foreach ($categories as $catName) {
             $category = new Category();
             $category->setName($catName);
             $imageName = "cat_" . $catName . '.png';
             $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . $catName . '/' . $imageName;
+=======
+        $categories = ["computer", "laptop", "monitor"];
+        foreach ($categories as $catName) {
+            $category = new Category();
+            $category->setName($catName);
+            $imageName = "cat_" . $catName . '.jpg';
+            $imagePath = $this->kernel->getProjectDir() . "/assets/images/" . $imageName;
+>>>>>>> refs/remotes/origin/master
             $url = $this->uploaderService->copy($imagePath);
             $category->setImageURL($url);
             $manager->persist($category);
@@ -70,8 +104,13 @@ class ProductFixture extends Fixture
                 $product->setCategory($category);
             }
 
+<<<<<<< HEAD
             $image_name = $cat_name . '_' . rand(1, 6) . '.png';
             $imagePath = $this->kernel->getProjectDir() . '/dummy-data/' . $cat_name . '/' . $image_name;
+=======
+            $image_name = $product->getTitle().rand(1000,5243) . '.jpg';
+            $imagePath = $this->kernel->getProjectDir() . '/assets/images/' . $image_name;
+>>>>>>> refs/remotes/origin/master
 
             if (file_exists($imagePath)) {
                 $url = $this->uploaderService->copy($imagePath);
@@ -103,8 +142,13 @@ class ProductFixture extends Fixture
             }
             $product->setProperties($properties);
 
+<<<<<<< HEAD
             $image_name = $prod_name . '.png';
             $imagePath = $this->kernel->getProjectDir() . '/dummy-data/' . $image_name;
+=======
+            $image_name = $prod_name . rand(1000,5243) . '.jpg';
+            $imagePath = $this->kernel->getProjectDir() . '/assets/images/' . $image_name;
+>>>>>>> refs/remotes/origin/master
 
             if (file_exists($imagePath)) {
                 $url = $this->uploaderService->copy($imagePath);
@@ -116,5 +160,8 @@ class ProductFixture extends Fixture
 
         $manager->flush();
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> refs/remotes/origin/master
 }

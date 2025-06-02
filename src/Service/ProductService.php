@@ -1,5 +1,12 @@
 <?php
 
+namespace App\Service;
+
+use App\Entity\Category;
+use App\Entity\Product;
+use App\Repository\ProductRepository;
+use Doctrine\ORM\EntityManagerInterface;
+
 class ProductService
 {
     public function __construct(
@@ -31,7 +38,7 @@ class ProductService
     public function updateProduct(Product|int $target, Product $newData): void
     {
         $product = $target instanceof Product ? $target : $this->repo->find($target);
-        
+
         if ($newData->getTitle() !== null) $product->setTitle($newData->getTitle());
         if ($newData->getDescription() !== null) $product->setDescription($newData->getDescription());
         if ($newData->getImageURL() !== null) $product->setImageURL($newData->getImageURL());
