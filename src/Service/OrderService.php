@@ -1,6 +1,13 @@
 <?php
 
-// src/Service/OrderService.php
+namespace App\Service;
+
+use App\Entity\Order;
+use App\Entity\OrderItem;
+use App\Entity\User;
+use App\Repository\OrderRepository;
+use App\Repository\ProductRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class OrderService
 {
@@ -18,7 +25,7 @@ class OrderService
     {
         $order = new Order();
         $order->setUser($user);
-        
+
         $total = 0;
         foreach ($cartData as $pid => $item) {
             $product = $this->productRepo->find($pid);
