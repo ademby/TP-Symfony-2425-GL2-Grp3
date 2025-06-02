@@ -20,6 +20,14 @@ class CategoryService
     {
         return $this->repo->findAll();
     }
+    public function getById(int $id): ?Category
+    {
+        return $this->repo->find($id);
+    }
+    public function getByName(string $name): ?Category
+    {
+        return $this->repo->findOneBy(['name' => $name]);
+    }
 
     public function addCategory(Category $category): void
     {

@@ -230,7 +230,7 @@ strong {
   SITE HEADER
 -----------------------------------------*/
 .site-header {
-  position: absolute;
+  /*position: absolute;*/
   z-index: 22;
   top: 0;
   right: 0;

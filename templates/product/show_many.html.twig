@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All Products{% endblock %}
+
+{% block body %}
+    <div class="container mt-4 mb-5">
+        <h1 style="color: var(--primary-color)" class="mb-4 text-center">
+            All Products
+        </h1>
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for product in products %}
+                <div class="col d-flex align-items-stretch">
+                    <div class="card w-100 h-100 shadow-sm">
+                        <div class="card-img-container" style="height: 200px; overflow: hidden;">
+                            <img src="{{ asset(product.imageURL) }}" class="card-img-top" alt="{{ product.title }}"
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ product.title }}</h5>
+                            <p class="card-text text-muted mb-3">{{ product.description }}</p>
+
+{#                          Properties #}
+                            {% if product.properties is defined and product.properties %}
+                                <div class="mb-3 small">
+                                    <h6 class="text-secondary">Specifications:</h6>
+                                    <ul class="list-unstyled">
+                                        {% for key, value in product.properties %}
+                                            <li><strong>{{ key }}:</strong> {{ value }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            {#                          Flouss #}
+                            <div class="mt-auto">
+                                <h4 class="text-primary mb-3">
+                                    {{ product.price|number_format(0, ',', ' ') }} DT
+                                </h4>
+
+{#                                Details#}
+                                <div class="d-grid gap-2">
+                                    <a href="{{ path('prod_show_prod', {'id': product.id}) }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-eye"></i> View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <h4>No products found</h4>
+                        <p>There are currently no products available.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <style>
+        /* Make all links consistent */
+        .site-header a {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Ensure all cards have the same height */
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 0.5rem;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Make all buttons the same size */
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Consistent card title height */
+        .card-title {
+            height: 2.5rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        /* Consistent card text height */
+        .card-text {
+            height: 3rem;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+    </style>
+{% endblock %}

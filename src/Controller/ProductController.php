@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\Category;
+use App\Service\CategoryService;
 use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +14,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
+    public function __construct(
+        private CategoryService $categoryService,
+        private ProductService $productService
+    )
+    {
+    }
+
     #[Route('/add', name: 'prod_add')]
     #[IsGranted('ROLE_ADMIN')]
     public function add(): Response
@@ -34,11 +43,10 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/', name: 'prod_show_all')]
-    public function show_all(ProductService $productService): Response
+    public function show_all(): Response
     {
-        return $this->render('product/show_all.html.twig', [
-            'controller_name' => 'ProductController',
-            'products' => $productService->getProducts() // Testing the service
+        return $this->render('product/show_many.html.twig', [
+            'products' => $this->productService->getProducts() // Testing the service
         ]);
     }
 
@@ -53,8 +61,14 @@ final class ProductController extends AbstractController
     #[Route('/category/{cat_name}', name: 'prod_show_cat')]
     public function show_cat(string $cat_name): Response
     {
-        return $this->render('product/show_cat.html.twig', [
-            'cat_name' => $cat_name
+        // Check if the category exists
+        $cat = $this->categoryService->getByName($cat_name);
+        if ( $cat == null) {
+            throw $this->createNotFoundException("Category '$cat_name' does not exist.");
+        }
+        return $this->render('product/show_many.html.twig', [
+            'cat_name' => $cat_name,
+            'products' => $this->productService->getProducts($cat)
         ]);
     }
 }
