@@ -62,13 +62,13 @@ final class ProductController extends AbstractController
     public function show_cat(string $cat_name): Response
     {
         // Check if the category exists
-        $cat = $this->categoryService->getByName($cat_name);
-        if ( $cat == null) {
+        $category = $this->categoryService->getByName($cat_name);
+        if ( $category == null) {
             throw $this->createNotFoundException("Category '$cat_name' does not exist.");
         }
         return $this->render('product/show_many.html.twig', [
-            'cat_name' => $cat_name,
-            'products' => $this->productService->getProducts($cat)
+            'category' => $category,
+            'products' => $this->productService->getProducts($category)
         ]);
     }
 }

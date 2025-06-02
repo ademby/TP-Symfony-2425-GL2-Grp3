@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}All Products{% endblock %}
+{% set TITLE = "All Products"%}
+{% if category is defined %}
+{% set TITLE =  category.name ~ " " ~ "Category"%}
+{% endif %}
+
+
+{% block title %}{{ TITLE }}{% endblock %}
 
 {% block body %}
     <div class="container mt-4 mb-5">
         <h1 style="color: var(--primary-color)" class="mb-4 text-center">
-            All Products
+            {{ TITLE }}
         </h1>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">

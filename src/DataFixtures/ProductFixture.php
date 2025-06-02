@@ -39,11 +39,11 @@ class ProductFixture extends Fixture
 
         $this->loadCategories($manager);
 
-        $this->loadProductsOfCategory($manager, "laptop");
+        $this->loadProductsOfCategory($manager, "Laptop");
         $this->loadProductsOfCategory($manager, "computer");
-        $this->loadProductsOfCategory($manager, "monitor");
-        $this->loadProductNoCategory($manager, "mouse");
-        $this->loadProductNoCategory($manager, "keyboard");
+        $this->loadProductsOfCategory($manager, "Monitor");
+        $this->loadProductNoCategory($manager, "Mouse");
+        $this->loadProductNoCategory($manager, "Keyboard");
 
 
     }
@@ -51,12 +51,12 @@ class ProductFixture extends Fixture
     public function loadCategories(ObjectManager $manager): void
     {
 
-        $categories = ["computer", "laptop", "monitor"];
+        $categories = ["Computer", "Laptop", "Monitor"];
         foreach ($categories as $catName) {
             $category = new Category();
             $category->setName($catName);
-            $imageName = "cat_" . $catName . '.png';
-            $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . $catName . '/' . $imageName;
+            $imageName = "cat_" . strtolower($catName) . '.png';
+            $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . strtolower($catName) . '/' . $imageName;
 
             $url = $this->uploaderService->copy($imagePath);
             $category->setImageURL($url);
@@ -89,8 +89,8 @@ class ProductFixture extends Fixture
             }
 
 
-            $image_name = $cat_name . '_' . rand(1, 6) . '.png';
-            $imagePath = $this->kernel->getProjectDir() . '/dummy-data/' . $cat_name . '/' . $image_name;
+            $image_name = strtolower($cat_name) . '_' . rand(1, 6) . '.png';
+            $imagePath = $this->kernel->getProjectDir() . '/dummy-data/' . strtolower($cat_name) . '/' . $image_name;
 
 
             if (file_exists($imagePath)) {
@@ -124,7 +124,7 @@ class ProductFixture extends Fixture
             $product->setProperties($properties);
 
 
-            $image_name = $prod_name . '.png';
+            $image_name = strtolower($prod_name) . '.png';
             $imagePath = $this->kernel->getProjectDir() . '/dummy-data/' . $image_name;
 
 
