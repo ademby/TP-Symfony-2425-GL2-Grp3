@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use App\Service\UploaderService;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
-class CategoryFixtures extends Fixture
+class CategoryFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
         private KernelInterface $kernel,
@@ -26,9 +26,7 @@ class CategoryFixtures extends Fixture
             $category->setName($catName);
             $imageName = $catName . '.png';
             $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . $catName . '/' . $imageName;
-            echo $imagePath.  "\n";
             $url = $this->uploaderService->copy($imagePath);
-            echo $url.  "\n";
             $category->setImageURL($url);
             $manager->persist($category);
         }
