@@ -40,7 +40,7 @@ class ProductFixture extends Fixture
         $this->loadCategories($manager);
 
         $this->loadProductsOfCategory($manager, "Laptop");
-        $this->loadProductsOfCategory($manager, "computer");
+        $this->loadProductsOfCategory($manager, "Computer");
         $this->loadProductsOfCategory($manager, "Monitor");
         $this->loadProductNoCategory($manager, "Mouse");
         $this->loadProductNoCategory($manager, "Keyboard");
@@ -137,5 +137,9 @@ class ProductFixture extends Fixture
         }
 
         $manager->flush();
+    }
+    public function getDependencies(): array
+    {
+        return [CategoryFixtures::class];
     }
 }
