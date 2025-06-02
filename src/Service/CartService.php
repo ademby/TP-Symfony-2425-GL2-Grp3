@@ -121,3 +121,11 @@ class CartService
     }
 
 }
+
+// USAGE
+// // Checkout
+// $cartData = $cartService->validate($user);
+// $order = $orderService->create($cartData, $user);
+// 
+// // Admin
+// $orderService->setStatus($order, 'shipped');
