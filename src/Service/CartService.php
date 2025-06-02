@@ -123,7 +123,6 @@ class CartService
     }
 
 }
-<<<<<<< HEAD
 
 // USAGE
 // // Checkout
@@ -132,5 +131,3 @@ class CartService
 // 
 // // Admin
 // $orderService->setStatus($order, 'shipped');
-=======
->>>>>>> refs/remotes/origin/master
