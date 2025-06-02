@@ -1,25 +1,141 @@
 {% extends 'base.html.twig' %}
+
 {% block body %}
-<div class="container" style="height: 100%">
-    <div style="padding: 13rem"></div>
-    <h1 class="mb-1" style="color: var(--primary-color)">Welcome to SMARKET!</h1>
-    <p>Explore our wide range of products and enjoy a seamless shopping experience.</p>
+<div class="homepage">
+  
+  {# Hero Section with Blurred Background #}
+  <div class="hero-wrapper">
+    {# Blurred Background Slideshow #}
+    <div class="slideshow">
+      {% set images = ['product-1.jpg', 'product-2.jpg', 'product-3.jpg'] %}
+      {% for image in images %}
+      <div class="slide" style="background-image: url('{{ asset('images/' ~ image) }}')"></div>
+      {% endfor %}
+    </div>
+    
+    {# Centered Content #}
+    <div class="hero-content">
+      <h1 class="hero-title">Welcome to SMARKET!</h1>
+      <a href="{{ path('login') }}" class="shop-button">Shop Now</a>
+    </div>
+  </div>
+
+  {# Your Page Content Here #}
+  <div class="container">
+    <!-- Rest of your content -->
+  </div>
 </div>
-    <style>
-        p {
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-    </style>
+
+<style>
+/* Base Styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.homepage {
+  position: relative;
+}
+
+/* Hero Wrapper */
+.hero-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Slideshow Styles */
+.slideshow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  filter: blur(6px);
+  transform: scale(1.05);
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+/* Hero Content */
+.hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 1s ease-out;
+}
+
+.shop-button {
+  display: inline-block;
+  padding: 12px 30px;
+  background-color: #4361ee;
+  color: white;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.shop-button:hover {
+  background-color: #3a56d4;
+  transform: translateY(-3px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  .slide {
+    filter: blur(4px);
+  }
+}
+</style>
+
+<script>
+// Simple Slideshow Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const slides = document.querySelectorAll('.slide');
+  let currentSlide = 0;
+  
+  // Initialize first slide
+  slides[currentSlide].classList.add('active');
+  
+  // Auto-rotate slides every 5 seconds
+  setInterval(function() {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+  }, 5000);
+});
+</script>
 {% endblock %}
-
-{#
-<!-- JAVASCRIPT FILES -->
-<script src="{{ asset('node_modules/jquery/dist/jquery.min.js') }}"></script>
-<script src="{{ asset('node_modules/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('init.js') }}"></script>
-
-</body>
-</html>
-
-#}
