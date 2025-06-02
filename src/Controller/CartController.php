@@ -12,7 +12,10 @@ final class CartController extends AbstractController
 {
     #[Route('/', name: 'cart_show')]
     public function index(): Response
-    {
+    { if (!$this->getUser()) {
+            $this->addFlash('danger', 'You must be logged in to access your cart.');
+            return $this->redirectToRoute('login');
+        }
         return $this->render('cart/index.html.twig', [
             'controller_name' => 'CartController',
         ]);
@@ -20,13 +23,19 @@ final class CartController extends AbstractController
 
     #[Route('/add', name: 'cart_add')]
     public function add(): Response
-    {
+    {if (!$this->getUser()) {
+            $this->addFlash('danger', 'You must be logged in to access your cart.');
+            return $this->redirectToRoute('login');
+        }
         return new Response("Added Product To Cart");
     }
 
     #[Route('/validate', name: 'cart_validate')]
     public function validate(): Response
-    {
+    {if (!$this->getUser()) {
+            $this->addFlash('danger', 'You must be logged in to access your cart.');
+            return $this->redirectToRoute('login');
+        }
         return new Response("Are you sure ? ... <br> We sent you an email, our agent will talk to you soon.");
     }
 }

@@ -11,7 +11,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class CategoryController extends AbstractController
 {
     #[Route('/', name: 'cat_show')]
-	#[IsGranted('ROLE_USER')]
+	
     public function index(): Response
     {
         return $this->render('category/index.html.twig', [
