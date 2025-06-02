@@ -5,26 +5,21 @@ namespace App\DataFixtures;
 use Symfony\Component\Filesystem\Filesystem;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use App\Service\UploaderService;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CleanFixtures extends Fixture
 {
-    private string $uploadDir;
-
-    public function __construct(string $uploadDir)
+    private UploaderService $uploaderService;
+    public function __construct(UploaderService $uploaderService)
     {
-        $this->uploadDir = $uploadDir;
+        $this->uploaderService = $uploaderService;
     }
 
     public function load(ObjectManager $manager): void
     {
-        $filesystem = new Filesystem();
-
-        // Clean the upload directory
-        if ($filesystem->exists($this->uploadDir)) {
-            $filesystem->remove($this->uploadDir); // Remove the directory and its contents
-        }
-
-        // Recreate the upload directory
-        $filesystem->mkdir($this->uploadDir, 0777); // Adjust the permissions as necessary
+        
+        $this->uploaderService->clean();
+        
     }
 }

@@ -34,8 +34,12 @@ services:
         arguments:
             $kernel: '@kernel'
             $uploaderService: '@App\Service\UploaderService'
-            
+
     App\DataFixtures\ProductFixtures:
         arguments:
             $kernel: '@kernel'
+            $uploaderService: '@App\Service\UploaderService'
+
+    App\DataFixtures\CleanFixtures:
+        arguments:
             $uploaderService: '@App\Service\UploaderService'

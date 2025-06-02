@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use App\Service\UploaderService;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class CategoryFixtures extends Fixture
 {
@@ -37,5 +38,10 @@ class CategoryFixtures extends Fixture
             $manager->persist($category);
         }
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [CleanFixtures::class];
     }
 }
