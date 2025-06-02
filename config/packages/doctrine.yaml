@@ -27,6 +27,13 @@ doctrine:
         controller_resolver:
             auto_mapping: false
 
+    fixtures:
+        - App\DataFixtures\CleanFixtures
+        - App\DataFixtures\CarFixtures
+        - App\DataFixtures\CategoryFixtures
+        - App\DataFixtures\ProductFixtures
+
+
 when@test:
     doctrine:
         dbal:
