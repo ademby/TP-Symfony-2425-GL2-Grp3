@@ -71,7 +71,7 @@ class ProductFixture extends Fixture
         $price_min = 100;
         $price_max = 9000;
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 6; $i++) {
             $product = new Product();
             $product->setTitle($faker->words(3, true));
             $product->setDescription($faker->words(rand(0, 12), true));
