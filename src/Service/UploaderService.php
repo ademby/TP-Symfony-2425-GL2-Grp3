@@ -35,16 +35,20 @@ class UploaderService
         if (!$this->filesystem->exists($sourcePath)) {
             throw new \InvalidArgumentException("Source file does not exist: $sourcePath");
         }
-
+//        var_dump($sourcePath);
         $originalFilename = pathinfo($sourcePath, PATHINFO_FILENAME);
         $extension = pathinfo($sourcePath, PATHINFO_EXTENSION);
-        $safeFilename = $this->slugger->slug($originalFilename);
-        $newFilename = $safeFilename.'-'.uniqid().'.'.$extension;
+
+        $newFilename = $originalFilename.'-'.uniqid().'.'.$extension;
+//        var_dump($newFilename);
 
         $destination = $this->uploadDir . '/' . $newFilename;
+//        var_dump($destination);
 
         $this->filesystem->copy($sourcePath, $destination);
-
+        if (!$this->filesystem->exists($destination)) {
+            throw new \InvalidArgumentException("Destination file does not exist: $destination");
+        }
         return 'uploads/'.$newFilename;
     }
 

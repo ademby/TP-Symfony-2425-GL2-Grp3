@@ -24,10 +24,11 @@ class CategoryFixtures extends Fixture
         foreach ($categories as $catName) {
             $category = new Category();
             $category->setName($catName);
-            $imageName = "cat_" . $catName . '.png';
+            $imageName = $catName . '.png';
             $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . $catName . '/' . $imageName;
-
+            echo $imagePath.  "\n";
             $url = $this->uploaderService->copy($imagePath);
+            echo $url.  "\n";
             $category->setImageURL($url);
             $manager->persist($category);
         }

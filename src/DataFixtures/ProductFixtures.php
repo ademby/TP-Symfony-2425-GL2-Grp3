@@ -92,11 +92,12 @@ class ProductFixtures extends Fixture implements DependentFixtureInterface
 
             $image_name = $cat_name . '_' . rand(1, 6) . '.png';
             $imagePath = $this->kernel->getProjectDir() . '/dummy-data/' . $cat_name . '/' . $image_name;
-
+            echo $imagePath . "\n";
 
             if (file_exists($imagePath)) {
                 $url = $this->uploaderService->copy($imagePath);
                 $product->setImageURL($url);
+                echo $url.  "\n";
             }
 
             $manager->persist($product);
