@@ -7,9 +7,3 @@ composer install
 cd assets && npm install && cd ..
 composer run update-sqlite
 ```
-WinCmd
-```bash
-composer update
-cd assets && npm install && cd ..
-composer run update-sqlite
-```
