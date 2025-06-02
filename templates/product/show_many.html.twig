@@ -26,6 +26,15 @@
                             <h5 class="card-title">{{ product.title }}</h5>
                             <p class="card-text text-muted mb-3">{{ product.description }}</p>
 
+{#                            Category if not known#}
+                            {% if category is not defined  and product.category is not null%}
+                                <div class="mb-3 small">
+                                    <h6 class="text-secondary">Category:</h6>
+                                    <ul class="list-unstyled">
+                                            <li>{{ product.category.name }}</li>
+                                    </ul>
+                                </div>
+                            {% endif %}
 {#                          Properties #}
                             {% if product.properties is defined and product.properties %}
                                 <div class="mb-3 small">

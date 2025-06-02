@@ -18,19 +18,16 @@ class CategoryFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = \Faker\Factory::create();
-        $faker->seed(0); 
-        
-        $categories = [
-            'computer',
-            'laptop',
-            'monitor',
-        ];
-        $categories = ["computer", "laptop", "monitor"];
+        $faker->seed(0);
+
+        // We decided not to use Faker for categories for the moment
+
+        $categories = ["Computer", "Laptop", "Monitor"];
         foreach ($categories as $catName) {
             $category = new Category();
             $category->setName($catName);
-            $imageName = "cat_" . $catName . '.png';
-            $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . $catName . '/' . $imageName;
+            $imageName = "cat_" . strtolower($catName) . '.png';
+            $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . strtolower($catName) . '/' . $imageName;
 
             $url = $this->uploaderService->copy($imagePath);
             $category->setImageURL($url);
