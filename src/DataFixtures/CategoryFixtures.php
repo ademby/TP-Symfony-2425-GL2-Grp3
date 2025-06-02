@@ -7,6 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 use App\Service\UploaderService;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 class CategoryFixtures extends Fixture
 {
@@ -19,20 +20,22 @@ class CategoryFixtures extends Fixture
     {
         $faker = \Faker\Factory::create();
         $faker->seed(0);
-
-        // We decided not to use Faker for categories for the moment
-
-        $categories = ["Computer", "Laptop", "Monitor"];
+        $categories = ["computer", "laptop", "monitor"];
         foreach ($categories as $catName) {
             $category = new Category();
             $category->setName($catName);
-            $imageName = "cat_" . strtolower($catName) . '.png';
-            $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . strtolower($catName) . '/' . $imageName;
+            $imageName = "cat_" . $catName . '.png';
+            $imagePath = $this->kernel->getProjectDir() . "/dummy-data/" . $catName . '/' . $imageName;
 
             $url = $this->uploaderService->copy($imagePath);
             $category->setImageURL($url);
             $manager->persist($category);
         }
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [CleanFixtures::class];
     }
 }

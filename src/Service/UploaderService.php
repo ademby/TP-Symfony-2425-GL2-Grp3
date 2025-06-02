@@ -47,14 +47,24 @@ class UploaderService
 
         return 'uploads/'.$newFilename;
     }
+
+    public function clean(): void
+    {
+        if ($this->filesystem->exists($this->uploadDir)) {
+            $this->filesystem->remove($this->uploadDir); // Remove the directory and all its contents
+        }
+
+        // Recreate the directory with proper permissions
+        $this->filesystem->mkdir($this->uploadDir, 0777); // or adjust permissions as necessary
+    }
 }
 
 
-// Usage: 
+// Usage:
 // use App\Service\UploaderService;
 // if ($form->isSubmitted() && $form->isValid()) {
 //     $file = $form->get('image')->getData();
-// 
+//
 //     if ($file) {
 //         $imageUrl = $uploaderService->upload($file);
 //         $entity->setImageUrl($imageUrl);
@@ -62,7 +72,7 @@ class UploaderService
 // }
 // ---------------------------------------------
 // use App\Service\UploaderService;
-// 
+//
 // $imagePath = __DIR__.'/images/sample.jpg';
 // $imageUrl = $uploaderService->copy($imagePath);
 // $entity->setImageUrl($imageUrl);

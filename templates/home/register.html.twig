@@ -9,7 +9,7 @@
 
                 {#                Enter Username #}
                 <div class="form-floating mb-4 p-0">
-                    <input type="text" name="username" id="username" pattern="[^ @]*@[^ @]*" class="form-control"
+                    <input type="text" name="username" id="username" pattern="^[a-zA-Z0-9_]{3,16}$*" class="form-control"
                            placeholder="Email address" required="">
 
                     <label for="username">Username</label>
@@ -31,7 +31,7 @@
                 {#                Submit #}
                 <button type="submit" class="form-control mb-4" style="width: 100%">Sign Up</button>
                 {#                Register Redirect #}
-                <a href="{{ path('login') }}" class="btn custom-btn custom-border-btn" style="width: 100% ; font-size: small; font-weight : lighter ">Already Have and Account ?</a>
+                <a href="{{ path('login') }}" class="btn custom-btn custom-border-btn" style="width: 100% ; font-size: small; font-weight : lighter ">Already Have An Account ?</a>
 
             </form>
 
