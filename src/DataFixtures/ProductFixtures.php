@@ -53,43 +53,6 @@ class ProductFixtures extends Fixture
         // moved into category fixtures
     }
 
-    private function generateProductName(string $category): string 
-    {
-        $brands = [
-            'computer' => ['Dell', 'HP', 'Lenovo', 'Apple', 'Asus'],
-            'laptop' => ['MacBook', 'ThinkPad', 'ZenBook', 'XPS', 'Surface'],
-            'monitor' => ['UltraSharp', 'ProDisplay', 'ViewFinity', 'Spectre', 'OLED Pro']
-        ];
-        
-        $models = ['Pro', 'Max', 'Air', '360', 'Touch', 'Elite'];
-        
-        return sprintf('%s %s %d',
-            $brands[$category][array_rand($brands[$category])],
-            $models[array_rand($models)],
-            rand(1000, 9999)
-        );
-    }
-
-    private function generateDescription(string $title): string 
-    {
-        $features = [
-            "Ultra-fast performance",
-            "Energy efficient design",
-            "Crisp, vibrant display",
-            "Ergonomic construction",
-            "Premium build quality"
-        ];
-        
-        shuffle($features);
-        return sprintf(
-            "The %s delivers %s. %s. Perfect for %s.",
-            $title,
-            $features[0],
-            $features[1],
-            ['professionals', 'gamers', 'creatives', 'everyday use'][rand(0, 3)]
-        );
-    }
-
     public function loadProductsOfCategory(ObjectManager $manager, string $cat_name): void
     {
         $faker = \Faker\Factory::create();
@@ -98,9 +61,8 @@ class ProductFixtures extends Fixture
 
         for ($i = 0; $i < 6; $i++) {
             $product = new Product();
-            $title = $this->generateProductName($cat_name);
-            $product->setTitle($title);
-            $product->setDescription($this->generateDescription($title));
+            $product->setTitle($faker->words(3, true));
+            $product->setDescription($faker->words(rand(0, 12), true));
             $product->setPrice(rand($price_min, $price_max));
 
             $properties = [];
