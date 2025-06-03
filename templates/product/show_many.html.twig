@@ -27,7 +27,7 @@
                             <p class="card-text text-muted mb-3">{{ product.description }}</p>
 
 {#                            Category if not known#}
-                            {% if category is not defined  and product.category is not null%}
+                            {% if category is defined  and product.category is not null%}
                                 <div class="mb-3 small">
                                     <h6 class="text-secondary">Category:</h6>
                                     <ul class="list-unstyled">
