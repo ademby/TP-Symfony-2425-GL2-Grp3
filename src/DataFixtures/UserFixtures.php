@@ -19,6 +19,12 @@ class UserFixtures extends Fixture
         $admin->setPassword($this->hasher->hashPassword($admin,'admin'));
         $admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
         $admin->setFirstName('BouDouma');
+        $admin->setLastName('Chaker');
+        $admin->setPhone('+216 99 999 999');
+        $admin->setAge(99);
+        $admin->setRegion('Tunis');
+        $admin->setCreatedAt(new \DateTime('2000-01-01 00:00:00'));
+
 
         $user = new User();
         $user->setEmail("user@gmail.com");
