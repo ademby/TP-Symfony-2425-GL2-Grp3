@@ -2,14 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
-use App\Entity\Category;
-use App\Service\CategoryService;
-use App\Service\ProductService;
+use App\Entity\{Product,Category};
+use App\Service\{CategoryService,ProductService,UploaderService};
+use App\Form\ProductForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\{Response,Request};
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 #[Route('/product')]
 final class ProductController extends AbstractController
@@ -21,19 +22,106 @@ final class ProductController extends AbstractController
     {
     }
 
-    #[Route('/add', name: 'prod_add')]
+    #[Route('/add', name: 'prod_add', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function add(): Response
+    public function add(Request $request, UploaderService $uploader, ValidatorInterface $validator): Response
     {
-        return $this->render('product/add.html.twig');
+        $product = new Product();
+        $form = $this->createForm(ProductForm::class, $product, [
+            'submit_label' => 'Add Product',
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($product->getCategory() === null) {} // may need later
+            
+            $imageFile = $form->get('imageFile')->getData();
+
+            if ($imageFile) {
+                $imagePath = $uploader->upload($imageFile);
+                $product->setImageURL($imagePath);
+
+                $errors = $validator->validate($product);
+
+                if (count($errors) > 0) {
+                    foreach ($errors as $error) {
+                        $this->addFlash('error', $error->getPropertyPath() . ': ' . $error->getMessage());
+                    }
+                } else {
+                    $this->productService->addProduct($product);
+                    $this->addFlash('success', 'Product added successfully!');
+                    return $this->redirectToRoute('prod_show_all');
+                }
+            } else {
+                $this->addFlash('error', 'Please upload a product image.');
+            }
+        }
+
+        return $this->render('product/add.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
-    #[Route('/update', name: 'prod_update')]
-    #[IsGranted('ROLE_ADMIN')]
-    public function update(): Response
-    {
-        return $this->render('product/update.html.twig');
+#[Route('/update/{id}', name: 'prod_update', methods: ['GET', 'POST'])]
+#[IsGranted('ROLE_ADMIN')]
+public function update(int $id, Request $request, UploaderService $uploader, ValidatorInterface $validator): Response
+{
+    $originalProduct = $this->productService->getProduct($id);
+    if (!$originalProduct) {
+        $this->addFlash('error', 'Product not found.');
+        return $this->redirectToRoute('prod_list');
     }
+
+    // Create empty changes object
+    $productChanges = new Product();
+
+    // Inject original values (except imageURL which will be handled separately)
+    $productChanges->setTitle($originalProduct->getTitle());
+    $productChanges->setDescription($originalProduct->getDescription());
+    $productChanges->setPrice($originalProduct->getPrice());
+    $productChanges->setProperties($originalProduct->getProperties());
+    $productChanges->setCategory($originalProduct->getCategory());
+    // Do NOT set imageURL here — image handled by uploader and merge logic
+
+    $form = $this->createForm(ProductForm::class, $productChanges, [
+        'submit_label' => 'Update Product',
+    ]);
+
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Handle image upload separately
+        $imageFile = $form->get('imageFile')->getData();
+        if ($imageFile) {
+            $imagePath = $uploader->upload($imageFile);
+            $productChanges->setImageURL($imagePath);
+        }
+
+        // Validate the merged product before applying update
+        $errors = $validator->validate($productChanges);
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error->getPropertyPath() . ': ' . $error->getMessage());
+            }
+        } else {
+            // Apply selective merge update
+            $this->productService->updateProduct($originalProduct, $productChanges);
+
+            $this->addFlash('success', 'Product updated successfully!');
+            return $this->redirectToRoute('prod_show_prod', ['id' => $originalProduct->getId()]);
+        }
+    }
+
+    return $this->render('product/update.html.twig', [
+        'form' => $form->createView(),
+        'product' => $originalProduct,
+    ]);
+}
+
+
+
+
     #[Route('/delete/{id}', name: 'prod_delete')]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id): Response

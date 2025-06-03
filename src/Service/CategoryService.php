@@ -52,21 +52,21 @@ class CategoryService
         $this->em->flush();
     }
 
-public function deleteCategory(Category|int $category): void
-{
-    $category = $category instanceof Category 
-        ? $category 
-        : $this->repo->find($category);
+    public function deleteCategory(Category|int $category): void
+    {
+        $category = $category instanceof Category 
+            ? $category 
+            : $this->repo->find($category);
 
-    if (!$category) {
-        return;
+        if (!$category) {
+            return;
+        }
+        $products = $category->getProducts();
+        foreach ($products as $product) {
+            $product->setCategory(null);
+            $this->em->persist($product);
+        }
+        $this->em->remove($category);
+        $this->em->flush();
     }
-    $products = $category->getProducts();
-    foreach ($products as $product) {
-        $product->setCategory(null);
-        $this->em->persist($product);
-    }
-    $this->em->remove($category);
-    $this->em->flush();
-}
 }

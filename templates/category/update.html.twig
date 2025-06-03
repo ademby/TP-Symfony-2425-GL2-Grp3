@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Update Category{% endblock %}
+
+{% block body %}
+    <h1>Update Category: {{ category.name }}</h1>
+    
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.imageFile) }}
+        {{ form_row(form.submit) }}
+
+    {{ form_end(form) }}
+{% endblock %}

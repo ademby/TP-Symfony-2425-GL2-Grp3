@@ -18,13 +18,13 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
+    
     #[ORM\Column(length: 128, unique: true)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(groups: ['CategoryCreation'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 512)]
-    #[Assert\NotBlank]
-    #[Assert\Url]
+    #[Assert\NotBlank(groups: ['Default'])]
     private ?string $imageURL = null;
 
     /**

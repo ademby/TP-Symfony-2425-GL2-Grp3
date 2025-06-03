@@ -1,10 +1,24 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Update Product{% endblock %}
+
 {% block body %}
-    <h1>Form to update a certain product properties</h1>
+<h1>Update Product</h1>
+
+{{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'novalidate': 'novalidate'}}) }}
+
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.price) }}
+
+    {{ form_row(form.properties) }}
+    
+    {{ form_row(form.imageFile) }}
+
+    {{ form_row(form.category) }}
+
+    {{ form_row(form.submit) }}
+
+{{ form_end(form) }}
+
 {% endblock %}
-
-{% block title %}
-
-{% endblock %}
-

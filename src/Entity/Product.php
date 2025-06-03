@@ -24,8 +24,7 @@ class Product
     private ?string $description = null;
 
     #[ORM\Column(length: 512)]
-    #[Assert\NotBlank]
-    #[Assert\Url]
+    #[Assert\NotBlank(groups: ['Default'])]
     private ?string $imageURL = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]

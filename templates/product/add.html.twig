@@ -1,10 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-
-{% endblock %}
+{% block title %}Add Product{% endblock %}
 
 {% block body %}
-    <h2> Form to add products to the database</h2>
-{% endblock %}
+<h1>Add Product</h1>
 
+{{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+    {{ form_row(form.title) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.price) }}
+
+    {{ form_row(form.properties) }}
+    
+    {{ form_row(form.imageFile) }}
+
+    {{ form_row(form.category) }}
+
+    {{ form_row(form.submit) }}
+
+{{ form_end(form) }}
+
+{% endblock %}
