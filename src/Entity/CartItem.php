@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CartItemRepository::class)]
-#[ORM\UniqueConstraint(name: 'cart_product_unique', columns: ['cart_id', 'product_id'])]
+#[ORM\UniqueConstraint(name: 'cart_product_unique', columns: ['user_id', 'product_id'])]
 class CartItem
 {
     #[ORM\Id]
@@ -23,7 +23,7 @@ class CartItem
     #[ORM\ManyToOne(inversedBy: 'cartItems')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\NotNull]
-    private ?Cart $cart = null;
+    private ?User $user = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -47,14 +47,14 @@ class CartItem
         return $this;
     }
 
-    public function getCart(): ?Cart
+    public function getUser(): ?User
     {
-        return $this->cart;
+        return $this->user;
     }
 
-    public function setCart(?Cart $cart): static
+    public function setUser(?User $user): static
     {
-        $this->cart = $cart;
+        $this->user = $user;
 
         return $this;
     }

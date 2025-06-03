@@ -1,20 +1,212 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CartController!{% endblock %}
+{% block title %}Shopping Cart - SMARKET{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('styles/tooplate.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <main class="section-bg">
+        <section class="section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Cart Header -->
+                        <div class="d-flex align-items-center mb-5">
+                            <i class="bi-cart4 me-3" style="font-size: 4rem; color: var(--primary-color);"></i>
+                            <div>
+                                <h2 class="mb-1" style="color: var(--primary-color);">Shopping Cart</h2>
+                                <p class="mb-0" style="color: var(--p-color);">Review your items before checkout</p>
+                            </div>
+                        </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+                        <!-- Flash Messages -->
+                        {% for message in app.flashes('success') %}
+                            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert" style="background-color: var(--secondary-color); border-color: var(--primary-color); color: var(--dark-color);">
+                                <i class="bi-check-circle me-2"></i>{{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/mambaa/Documents/GL2S2/WebMrAymen/Symfony/PHPStorm/TP-Symfony-2425-GL2-Grp3/src/Controller/CartController.php</code></li>
-        <li>Your template at <code>/home/mambaa/Documents/GL2S2/WebMrAymen/Symfony/PHPStorm/TP-Symfony-2425-GL2-Grp3/templates/cart/index.html.twig</code></li>
-    </ul>
-</div>
-{% endblock %}
+                        {% for message in app.flashes('error') %}
+                            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert" style="background-color: #f8d7da; border-color: #dc3545; color: #721c24;">
+                                <i class="bi-exclamation-triangle me-2"></i>{{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+
+                        {% if app.user and app.user.cartItems|length > 0 %}
+                            <div class="row">
+                                <!-- Cart Items -->
+                                <div class="col-lg-8 mb-4">
+                                    <div class="card" style="background-color: var(--section-bg-color); border: none; border-radius: var(--border-radius-medium); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                                        <div class="card-header" style="background-color: transparent; border-bottom: 2px solid var(--primary-color); padding: 1.5rem;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h4 class="mb-0" style="color: var(--dark-color); font-family: var(--heading-font-family), sans-serif;">
+                                                    <i class="bi-bag me-2"></i>Cart Items ({{ app.user.cartItems|length }})
+                                                </h4>
+                                                <a href="{{ path('cart_clear') }}" class="custom-btn btn btn-sm"
+                                                   onclick="return confirm('Are you sure you want to clear your cart?')"
+                                                   style="background-color: #dc3545; border-color: #dc3545;">
+                                                    <i class="bi-trash me-1"></i>Clear Cart
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            {% set cartTotal = 0 %}
+                                            {% for item in app.user.cartItems %}
+                                                {% set itemTotal = item.product.price * item.quantity %}
+                                                {% set cartTotal = cartTotal + itemTotal %}
+                                                <div class="cart-item p-4 border-bottom" style="transition: background-color 0.3s ease;">
+                                                    <div class="row align-items-center">
+                                                        <!-- Product Image -->
+                                                        <div class="col-md-2 col-sm-3 mb-3 mb-md-0">
+                                                            {% if item.product.imageURL %}
+                                                                <img src="{{ item.product.imageURL }}"
+                                                                     alt="{{ item.product.title }}"
+                                                                     class="img-fluid rounded"
+                                                                     style="border-radius: var(--border-radius-small); max-height: 80px; width: 80px; object-fit: cover;">
+                                                            {% else %}
+                                                                <div class="d-flex align-items-center justify-content-center rounded"
+                                                                     style="height: 80px; width: 80px; background-color: var(--p-color); border-radius: var(--border-radius-small);">
+                                                                    <i class="bi-image" style="font-size: 2rem; color: var(--white-color);"></i>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+
+                                                        <!-- Product Details -->
+                                                        <div class="col-md-4 col-sm-5 mb-3 mb-md-0">
+                                                            <h5 class="mb-1" style="color: var(--dark-color); font-family: var(--heading-font-family), sans-serif;">
+                                                                <a href="{{ path('prod_show_prod', {id: item.product.id}) }}"
+                                                                   style="color: var(--dark-color); text-decoration: none;">
+                                                                    {{ item.product.title }}
+                                                                </a>
+                                                            </h5>
+                                                            {% if item.product.category %}
+                                                                <small class="badge" style="background-color: var(--secondary-color); color: var(--dark-color);">
+                                                                    <i class="bi-tag me-1"></i>{{ item.product.category.name }}
+                                                                </small>
+                                                            {% endif %}
+                                                            <p class="mb-2 mt-2" style="color: var(--p-color); font-size: 14px;">
+                                                                {{ item.product.description|length > 80 ? item.product.description|slice(0, 80) ~ '...' : item.product.description }}
+                                                            </p>
+                                                        </div>
+
+                                                        <!-- Quantity Controls -->
+                                                        <div class="col-md-3 col-sm-2 mb-3 mb-md-0">
+                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                <form method="post" action="{{ path('cart_add', {id: item.id}) }}" class="d-inline">
+                                                                    <button type="submit" name="action" value="decrease"
+                                                                            class="btn btn-sm custom-border-btn"
+                                                                            style="border-radius: var(--border-radius-small);">
+                                                                        <i class="bi-dash"></i>
+                                                                    </button>
+                                                                </form>
+                                                                <span class="mx-3 fw-bold" style="color: var(--dark-color); min-width: 30px; text-align: center; font-family: var(--heading-font-family), sans-serif;">
+                                                                    {{ item.quantity }}
+                                                                </span>
+                                                                <form method="post" action="{{ path('cart_add', {id: item.id}) }}" class="d-inline">
+                                                                    <button type="submit" name="action" value="increase"
+                                                                            class="btn btn-sm custom-border-btn"
+                                                                            style="border-radius: var(--border-radius-small);">
+                                                                        <i class="bi-plus"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                            {% if item.product.properties.stock is defined %}
+                                                                <div class="text-center mt-2">
+                                                                    <small style="color: var(--p-color);">
+                                                                        Stock: {{ item.product.properties.stock }}
+                                                                    </small>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+
+                                                        <!-- Price and Remove -->
+                                                        <div class="col-md-3 col-sm-2 text-end">
+                                                            <div class="mb-2">
+                                                                <div style="color: var(--p-color); font-size: 14px;">
+                                                                    ${{ "%.2f"|format(item.product.price) }} each
+                                                                </div>
+                                                                <div class="fw-bold" style="color: var(--primary-color); font-size: 18px; font-family: var(--heading-font-family), sans-serif;">
+                                                                    ${{ "%.2f"|format(itemTotal) }}
+                                                                </div>
+                                                            </div>
+                                                            <form method="post" action="{{ path('cart_remove', {id: item.id}) }}" class="d-inline">
+                                                                <button type="submit" class="btn btn-sm"
+                                                                        onclick="return confirm('Remove this item from cart?')"
+                                                                        style="background-color: #dc3545; color: var(--white-color); border-radius: var(--border-radius-small);">
+                                                                    <i class="bi-trash"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Cart Summary -->
+                                <div class="col-lg-4">
+                                    <div class="card sticky-top" style="background-color: var(--section-bg-color); border: none; border-radius: var(--border-radius-medium); top: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                                        <div class="card-header" style="background-color: transparent; border-bottom: 2px solid var(--secondary-color); padding: 1.5rem;">
+                                            <h4 class="mb-0" style="color: var(--dark-color); font-family: var(--heading-font-family), sans-serif;">
+                                                <i class="bi-calculator me-2"></i>Order Summary
+                                            </h4>
+                                        </div>
+                                        <div class="card-body" style="padding: 1.5rem;">
+                                            <!-- Subtotal -->
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <span style="color: var(--dark-color);">Subtotal ({{ app.user.cartItems|length }} items)</span>
+                                                <span class="fw-bold" style="color: var(--dark-color); font-family: var(--heading-font-family), sans-serif;">
+                                                    ${{ "%.2f"|format(cartTotal) }}
+                                                </span>
+                                            </div>
+
+                                            <!-- Shipping -->
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <span style="color: var(--dark-color);">Shipping</span>
+                                                <span style="color: var(--p-color);">
+                                                    {% set shipping = cartTotal > 50 ? 0 : 5.99 %}
+                                                    {% if shipping == 0 %}
+                                                        <span style="color: var(--primary-color); font-weight: var(--font-weight-bold);">FREE</span>
+                                                    {% else %}
+                                                        ${{ "%.2f"|format(shipping) }}
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+
+                                            <!-- Tax -->
+                                            <div class="d-flex justify-content-between mb-3">
+                                                <span style="color: var(--dark-color);">Tax (10%)</span>
+                                                <span style="color: var(--dark-color);">
+                                                    ${{ "%.2f"|format(cartTotal * 0.1) }}
+                                                </span>
+                                            </div>
+
+                                            <hr style="border-color: var(--primary-color); border-width: 2px;">
+
+                                            <!-- Total -->
+                                            <div class="d-flex justify-content-between mb-4">
+                                                <span class="fw-bold" style="color: var (--dark-color); font-size: 18px; font-family: var(--heading-font-family), sans-serif;">Total</span>
+                                                <span class="fw-bold" style="color: var(--primary-color); font-size: 20px; font-family: var(--heading-font-family), sans-serif;">
+                                                    {% set shipping = cartTotal > 50 ? 0 : 5.99 %}
+                                                    {% set tax = cartTotal * 0.1 %}
+                                                    {% set finalTotal = cartTotal + shipping + tax %}
+                                                    ${{ "%.2f"|format(finalTotal) }}
+                                                </span>
+                                            </div>
+
+                                            <!-- Free Shipping Notice -->
+                                            {% if cartTotal < 50 %}
+                                                <div class="alert" style="background-color: var(--secondary-color); border: 1px solid var(--primary-color); color: var(--dark-color); border-radius: var(--border-radius-small);">
+                                                    <i class="bi-truck me-2"></i>
+                                                    <small>Add ${{ "%.2f"|format(50 - cartTotal) }} more for free shipping!</small>
+                                                </div>
+                                            {% endif %}
+
+                                            <!-- Checkout Button -->
+                                            <div class="d-grid gap

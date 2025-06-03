@@ -191,8 +191,8 @@ strong {
     padding: 6px 18px;
 }
 .custom-btn-inv:hover {
-    background: var(--custom-btn-bg-hover-color);
-    color: var(--white-color);
+    background: transparent;
+    color: gray;
 }
 .custom-border-btn-inv {
     background: var(--secondary-color);
@@ -201,8 +201,8 @@ strong {
 }
 .custom-border-btn-inv:hover {
     background: transparent;
-    border-color: var(--white-color);;
-    color: var(--white-color);
+    border-color: gray;
+    color: gray;
 }
 /* --------------*/
 /* --------------*/

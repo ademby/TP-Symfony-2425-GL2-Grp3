@@ -46,6 +46,8 @@ class ProductService
         if (!empty($newData->getProperties())) $product->setProperties($newData->getProperties());
         if ($newData->getCategory() !== null) $product->setCategory($newData->getCategory());
 
+        $this->em->persist($product);
+
         $this->em->flush();
     }
 
