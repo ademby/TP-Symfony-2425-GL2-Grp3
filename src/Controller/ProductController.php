@@ -34,12 +34,17 @@ final class ProductController extends AbstractController
     {
         return $this->render('product/update.html.twig');
     }
-
-    #[Route('/delete', name: 'prod_delete')]
+    #[Route('/delete/{id}', name: 'prod_delete')]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(): Response
+    public function delete(int $id): Response
     {
-        return new Response("Wanna Deleted Product ? ..");
+        try {
+            $this->productService->deleteProduct($id);
+            return $this->redirectToRoute('prod_show_all');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Product not found or could not be deleted.');
+            return $this->redirectToRoute('prod_show_all');
+        }
     }
 
     #[Route('/', name: 'prod_show_all')]

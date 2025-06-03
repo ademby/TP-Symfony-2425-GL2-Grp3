@@ -39,10 +39,27 @@ final class CategoryController extends AbstractController
         return new Response("Updated Category {$cat_name}");
     }
 
+
     #[Route('/delete/{cat_name}', name: 'cat_delete')]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(string $cat_name): Response
     {
-        return new Response("Deleted Category {$cat_name}");
+        // Use the service's getByName method instead of directly accessing the repository
+        $category = $this->categoryService->getByName($cat_name);
+
+        if (!$category) {
+            $this->addFlash('error', 'Category not found.');
+            return $this->redirectToRoute('cat_show');
+        }
+
+        try {
+            // This already correctly uses the service's deleteCategory method
+            $this->categoryService->deleteCategory($category);
+            $this->addFlash('success', 'Category successfully deleted.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Category could not be deleted.');
+        }
+
+        return $this->redirectToRoute('cat_show');
     }
 }
