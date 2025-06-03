@@ -12,6 +12,92 @@
         <link rel="stylesheet" href="{{ asset('node_modules/bootstrap/dist/css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="{{ asset('node_modules/bootstrap-icons/font/bootstrap-icons.min.css') }}">
         <link rel="stylesheet" href="{{ asset('styles/tooplate.css') }}">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <style>
+            body {
+                background-color: #f8f9fa;
+                background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            main {
+                flex: 1;
+            }
+            .footer {
+                background-color: #343a40;
+                color: white;
+                padding: 1.5rem 0;
+                margin-top: auto;
+            }
+            .footer a {
+                color: #adb5bd;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+            .footer a:hover {
+                color: white;
+                text-decoration: none;
+            }
+            .footer-title {
+                font-weight: 700;
+                margin-bottom: 0.75rem;
+                color: white;
+                font-size: 1.1rem;
+            }
+            .footer-links {
+                list-style: none;
+                padding-left: 0;
+                margin-bottom: 1rem;
+            }
+            .footer-links li {
+                margin-bottom: 0.3rem;
+            }
+            .social-icons {
+                margin-top: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            .social-icons a {
+                display: inline-block;
+                margin-right: 0.75rem;
+                font-size: 1.25rem;
+            }
+            .copyright {
+                border-top: 1px solid #495057;
+                padding-top: 0.75rem;
+                margin-top: 1rem;
+                text-align: center;
+                color: #adb5bd;
+                font-size: 0.8rem;
+            }
+            .legal-btn {
+                background: none;
+                border: 1px solid #495057;
+                color: #adb5bd;
+                padding: 0.25rem 0.75rem;
+                border-radius: 4px;
+                font-size: 0.85rem;
+                transition: all 0.3s;
+            }
+            .legal-btn:hover {
+                background-color: rgba(255,255,255,0.05);
+                color: white;
+            }
+			    html, body {
+        height: 100%;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    main {
+        flex: 1 0 auto;
+    }
+    .footer {
+        flex-shrink: 0;
+    }
+
+        </style>
     {% endblock %}
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
@@ -31,23 +117,40 @@
         {% endfor %}
     {% endfor %}
 
-    {#    {% block debug %} #}
-    {#        <a href="{{ path('home') }}">Home</a> #}
-    {#        <a href="{{ path('login') }}">Login</a> #}
-    {#        <a href="{{ path('register') }}">Register</a> #}
-    {#        <a href="{{ path('logout') }}">Logout</a> #}
-    {#        <a href="{{ path('profile') }}">Profile</a> #}
-    {#    {% endblock %} #}
-    {% set is_login_or_register =
-            app.request.attributes.get('_route') == 'login'
-        or  app.request.attributes.get('_route') == 'register' %}
-    {% if not is_login_or_register %}
     <div class="container mt-4 mb-5" style="border-radius: 0.5rem; background-color: white; padding: 2rem;">
-        {% endif %}
     {% block body %}{% endblock %}
-    {% if not is_login_or_register %}
     </div>
-    {% endif %}
 </main>
+
+<footer class="footer mt-auto">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5 class="footer-title">SMARKET</h5>
+                <p style="font-size: 0.9rem;">Your premier online marketplace for quality products at competitive prices.</p>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <ul class="footer-links">
+                    <li><a href="{{ path('login') }}">Contact Us</a></li>
+                    <li><a href="{{ path('login') }}">Feedback</a></li>
+                    <li>
+                        <button class="legal-btn" onclick="window.location.href='{{ path('login') }}'">
+                             Policies
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; {{ "now"|date("Y") }} SMARKET. All rights reserved.
+        </div>
+    </div>
+</footer>
 </body>
 </html>
