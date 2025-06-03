@@ -2,40 +2,70 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
+use App\Service\CartService;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/cart')]
 #[IsGranted('ROLE_USER')]
 final class CartController extends AbstractController
 {
+    public function __construct(
+        public CartService $cartService,
+    )
+    {}
     #[Route('/', name: 'cart_show')]
+    #[IsGranted('ROLE_USER')]
     public function index(): Response
-    { if (!$this->getUser()) {
-            $this->addFlash('danger', 'You must be logged in to access your cart.');
-            return $this->redirectToRoute('login');
+    {
+        $user = $this->getUser();
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException('User not authenticated or invalid user type.');
         }
+        $cart = $this->cartService->getCartItems($user);
+
         return $this->render('cart/index.html.twig', [
-            'controller_name' => 'CartController',
+//            'cart' => null
+            'cart' => $cart
         ]);
     }
 
-    #[Route('/add', name: 'cart_add')]
-    public function add(): Response
-    {if (!$this->getUser()) {
-            $this->addFlash('danger', 'You must be logged in to access your cart.');
-            return $this->redirectToRoute('login');
+    #[Route('/add/{id}', name: 'cart_add')]
+    #[IsGranted('ROLE_USER')]
+    public function add(#[MapEntity] Product $product): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof \App\Entity\User) {
+            throw $this->createAccessDeniedException('User not authenticated or invalid user type.');
         }
-        return new Response("Added Product To Cart");
+        $cart = $this->cartService->getCartItems($user);
+        $this->cartService->addProduct($user, $product->getId());
+        return new Response($product->getTitle() . " added to cart");
+    }
+
+    #[Route('/remove', name: 'cart_remove')]
+    #[IsGranted('ROLE_USER')]
+    public function remove(): Response
+    {
+        return new Response("Removed Product From Cart");
+    }
+
+    #[Route('/clear', name: 'cart_clear')]
+    #[IsGranted('ROLE_USER')]
+    public function clear(): Response
+    {
+        return new Response("Cleared Cart");
     }
 
     #[Route('/validate', name: 'cart_validate')]
+    #[IsGranted('ROLE_USER')]
     public function validate(): Response
-    {if (!$this->getUser()) {
-            $this->addFlash('danger', 'You must be logged in to access your cart.');
-            return $this->redirectToRoute('login');
-        }
-        return new Response("Are you sure ? ... <br> We sent you an email, our agent will talk to you soon.");
+    {
+        return new Response("Wanna Proceed To Payment?");
     }
 }

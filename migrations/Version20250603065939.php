@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250603004418 extends AbstractMigration
+final class Version20250603065939 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -21,19 +21,16 @@ final class Version20250603004418 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            CREATE TABLE cart (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)
+            CREATE TABLE cart_item (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, user_id INTEGER NOT NULL, product_id INTEGER NOT NULL, quantity INTEGER DEFAULT 1 NOT NULL, CONSTRAINT FK_F0FE2527A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_F0FE25274584665A FOREIGN KEY (product_id) REFERENCES product (id) NOT DEFERRABLE INITIALLY IMMEDIATE)
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE cart_item (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, cart_id INTEGER NOT NULL, product_id INTEGER NOT NULL, quantity INTEGER DEFAULT 1 NOT NULL, CONSTRAINT FK_F0FE25271AD5CDBF FOREIGN KEY (cart_id) REFERENCES cart (id) NOT DEFERRABLE INITIALLY IMMEDIATE, CONSTRAINT FK_F0FE25274584665A FOREIGN KEY (product_id) REFERENCES product (id) NOT DEFERRABLE INITIALLY IMMEDIATE)
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE INDEX IDX_F0FE25271AD5CDBF ON cart_item (cart_id)
+            CREATE INDEX IDX_F0FE2527A76ED395 ON cart_item (user_id)
         SQL);
         $this->addSql(<<<'SQL'
             CREATE INDEX IDX_F0FE25274584665A ON cart_item (product_id)
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE UNIQUE INDEX cart_product_unique ON cart_item (cart_id, product_id)
+            CREATE UNIQUE INDEX cart_product_unique ON cart_item (user_id, product_id)
         SQL);
         $this->addSql(<<<'SQL'
             CREATE TABLE category (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name VARCHAR(128) NOT NULL, image_url VARCHAR(512) NOT NULL)
@@ -67,11 +64,8 @@ final class Version20250603004418 extends AbstractMigration
             CREATE INDEX IDX_D34A04AD12469DE2 ON product (category_id)
         SQL);
         $this->addSql(<<<'SQL'
-            CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, cart_id INTEGER DEFAULT NULL, email VARCHAR(180) NOT NULL, roles CLOB NOT NULL --(DC2Type:json)
-            , password VARCHAR(255) NOT NULL, phone VARCHAR(20) DEFAULT NULL, first_name VARCHAR(50) DEFAULT NULL, last_name VARCHAR(50) DEFAULT NULL, age INTEGER DEFAULT NULL, region VARCHAR(100) DEFAULT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, is_verified BOOLEAN NOT NULL, CONSTRAINT FK_8D93D6491AD5CDBF FOREIGN KEY (cart_id) REFERENCES cart (id) NOT DEFERRABLE INITIALLY IMMEDIATE)
-        SQL);
-        $this->addSql(<<<'SQL'
-            CREATE UNIQUE INDEX UNIQ_8D93D6491AD5CDBF ON user (cart_id)
+            CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, email VARCHAR(180) NOT NULL, roles CLOB NOT NULL --(DC2Type:json)
+            , password VARCHAR(255) NOT NULL, phone VARCHAR(20) DEFAULT NULL, first_name VARCHAR(50) DEFAULT NULL, last_name VARCHAR(50) DEFAULT NULL, age INTEGER DEFAULT NULL, region VARCHAR(100) DEFAULT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, is_verified BOOLEAN NOT NULL)
         SQL);
         $this->addSql(<<<'SQL'
             CREATE UNIQUE INDEX UNIQ_IDENTIFIER_EMAIL ON user (email)
@@ -96,9 +90,6 @@ final class Version20250603004418 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
-            DROP TABLE cart
-        SQL);
         $this->addSql(<<<'SQL'
             DROP TABLE cart_item
         SQL);

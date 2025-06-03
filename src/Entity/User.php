@@ -42,8 +42,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Length(min: 6)]
     private ?string $password = null;
 
-    #[ORM\OneToOne(inversedBy: 'yes', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?Cart $cart = null;
+    /**
+     * @var Collection<int, CartItem>
+     */
+    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $cartItems;
 
     /**
      * @var Collection<int, Order>
@@ -79,10 +82,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column]
-    private bool $isVerified = true; // this is it
+    private bool $isVerified = true; // this is to avoid email verification
 
     public function __construct()
     {
+        $this->cartItems = new ArrayCollection();
         $this->orders = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->roles = ['ROLE_USER'];
@@ -161,14 +165,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getCart(): ?Cart
+    public function getCartItems(): ?Collection
     {
-        return $this->cart;
+        return $this->cartItems;
     }
 
-    public function setCart(?Cart $cart): static
+    public function setCartItems(?Collection $cartItems): static
     {
-        $this->cart = $cart;
+        $this->cartItems = $cartItems;
+
+        return $this;
+    }
+
+    public function addCartItem(CartItem $cartItem): static
+    {
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems->add($cartItem);
+            $cartItem->setUser($this);
+        }
+        return $this;
+    }
+
+    public function removeCartItem(CartItem $cartItem): static
+    {
+        if ($this->cartItems->removeElement($cartItem)) {
+            // set the owning side to null (unless already changed)
+            if ($cartItem->getUser() === $this) {
+                $cartItem->setUser(null);
+            }
+        }
 
         return $this;
     }

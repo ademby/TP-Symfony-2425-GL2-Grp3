@@ -2,38 +2,39 @@
 
 namespace App\Service;
 
-use App\Entity\Cart;
 use App\Entity\CartItem;
 use App\Entity\User;
 use App\Repository\CartRepository;
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CartService
 {
     public function __construct(
-        private EntityManagerInterface $em,
-        private CartRepository $cartRepo,
-        private ProductRepository $productRepo
+        private EntityManagerInterface $entityManager,
+        private CartRepository         $cartRepository,
+        private ProductRepository      $productRepository
     ) {}
 
     /**
      * Gets or creates cart for user (always returns non-null)
      * Persistence: None (read-only unless modified)
      */
-    public function getCart(User $user): Cart
+    public function getCartItems(User $user): Collection
     {
-        if ($user->getCart() === null) {
-            $user->setCart(new Cart());
-            $this->em->persist($user->getCart());
-            $this->em->flush();
+        if ($user->getCartItems() === null) {
+            $user->setCartItems(new ArrayCollection());
+            $this->entityManager->persist($user->getCartItems());
+            $this->entityManager->flush();
         }
-        return $user->getCart();
+        return $user->getCartItems();
     }
 
-    private function findCartItem(Cart $cart, int $productId): ?CartItem
+    private function findCartItem(Collection $cartItems, int $productId): ?CartItem
     {
-        foreach ($cart->getItems() as $item) {
+        foreach ($cartItems as $item) {
             if ($item->getProduct()->getId() === $productId) {
                 return $item;
             }
@@ -50,17 +51,17 @@ class CartService
      */
     public function addProduct(User $user, int $productId): void
     {
-        $cart = $this->getCart($user);
-        $product = $this->productRepo->find($productId);
+        $cartItems = $this->getCartItems($user);
+        $product = $this->productRepository->find($productId);
 
-        if ($item = $this->findCartItem($cart, $productId)) {
+        if ($item = $this->findCartItem($cartItems, $productId)) {
             $item->setQuantity($item->getQuantity() + 1);
         } else {
-            $cart->addCartItem(new CartItem($product, 1));
-            $this->em->persist($cart->getCartItems()->last());
+            $user->addCartItem(new CartItem($product, 1));
+            $this->entityManager->persist($cartItems->last());
         }
 
-        $this->em->flush();
+        $this->entityManager->flush();
     }
     /*
      * WARNING: Avoid
@@ -75,30 +76,15 @@ class CartService
      */
     public function decQte(User $user, int $productId): void
     {
-        $this->setQte($user, $productId,
-            max(0, $this->getQte($user, $productId) - 1)
-        );
-    }
-
-
-    /**
-     * Removes items with zero quantity
-     * Persistence:
-     * - Removes zero-qty CartItems
-     * - Flushes changes
-     */
-    public function clearZeroQte(User $user): void
-    {
-        if ($cart = $this->cartRepo->findOneBy(['user' => $user])) {
-            foreach ($cart->getItems() as $item) {
-                if ($item->getQuantity() <= 0) {
-                    $cart->removeItem($item);
-                    $this->em->remove($item);
-                }
-            }
-            $this->em->flush();
+        $cartItems = $this->getCartItems($user);
+        $cartItem  = $this->findCartItem($cartItems,$productId);
+        $cartItems->removeElement($cartItem);
+        if($cartItem->getQuantity() > 1) {;
+//            $this->
         }
+        $user->setCartItems($cartItems);
     }
+
 
     /**
      * Finalizes cart contents
@@ -109,7 +95,7 @@ class CartService
      */
     public function validate(User $user): array
     {
-        $cart = $this->cartRepo->findOneBy(['user' => $user]);
+        $cart = $this->cartRepository->findOneBy(['user' => $user]);
         $result = [];
 
         if ($cart) {
@@ -122,8 +108,8 @@ class CartService
                 }
             }
 
-            $this->em->remove($cart);
-            $this->em->flush();
+            $this->entityManager->remove($cart);
+            $this->entityManager->flush();
         }
 
         return $result;
